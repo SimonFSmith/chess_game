@@ -1,22 +1,29 @@
 import pyglet
 
+# Ressources
+
 spriteimage = pyglet.resource.image('resources/spritesheet.png')
 spritesheet = pyglet.image.ImageGrid(spriteimage, 2, 6)
 dangerImg = pyglet.resource.image('resources/danger.png')
+
+# Add id to piece
 BLACK_KING, BLACK_QUEEN, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK, BLACK_PAWN, WHITE_KING, WHITE_QUEEN, WHITE_BISHOP, \
 WHITE_KNIGHT, WHITE_ROOK, WHITE_PAWN = range(12)
 
 
 class Piece(object):
+    # Attributes
     white = True
     piecesprite = None
     captured = False
 
+    # Constructor
     def __init__(self, type):
         self.white = type
         self.captured = False
 
     def MakeMove(self, board, move, king):
+        # Manage pieces' moves
         x = self.piecesprite.x // 75
         y = self.piecesprite.y // 75
         temp = board[y][x]
@@ -33,26 +40,34 @@ class Piece(object):
         return check
 
     def GetValidMoves(self, board, king):
+        # All moves possible
         ListOfMoves = self.GetThreatSquares(board)
+        # All valid moves
         ValidMoves = []
         for move in ListOfMoves:
-            # tempboard = deepcopy(board)                                         # Can be optimized. Edit MakeMove function to simply revert any changes
+            # tempboard = deepcopy(board)
+            # Can be optimized. Edit MakeMove function to simply revert any changes
             if not self.MakeMove(board, move, king):
+                # Add possible move to list
                 ValidMoves.append(move)
         return ValidMoves
 
     def ChangeLocation(self, x, y, board):
+        # Change piece's graphical position
         # self.x = x
         # self.y = y
         self.piecesprite.x = x * 75
         self.piecesprite.y = y * 75
 
     def Draw(self):
+        # Draw piece on initialization
         self.piecesprite.draw()
 
 
 class Pawn(Piece):
+    # Pawn class
     def __init__(self, x, y, type=True):
+        # Initialize pawn's image
         super(Pawn, self).__init__(type)
         if self.white:
             self.pieceimage = spritesheet[WHITE_PAWN]
@@ -61,6 +76,7 @@ class Pawn(Piece):
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
 
     def GetThreatSquares(self, board):
+        # Calculate possible moves
         x = self.piecesprite.x // 75
         y = self.piecesprite.y // 75
         ListOfMoves = []
@@ -199,42 +215,42 @@ class Bishop(Piece):
         y = self.piecesprite.y // 75
         ListOfMoves = []
         for i in range(1, 8):
-            if y-i < 0 or x-i < 0:
+            if y - i < 0 or x - i < 0:
                 break
-            if board[y-i][x-i] is not None:
-                if board[y-i][x-i].white != self.white:
-                    ListOfMoves.append((y-i, x-i))
+            if board[y - i][x - i] is not None:
+                if board[y - i][x - i].white != self.white:
+                    ListOfMoves.append((y - i, x - i))
                 break
-            ListOfMoves.append((y-i, x-i))
+            ListOfMoves.append((y - i, x - i))
         for i in range(1, 8):
             try:
-                if board[y+i][x+i] is not None:
-                    if board[y+i][x+i].white != self.white:
-                        ListOfMoves.append((y+i, x+i))
+                if board[y + i][x + i] is not None:
+                    if board[y + i][x + i].white != self.white:
+                        ListOfMoves.append((y + i, x + i))
                     break
-                ListOfMoves.append((y+i, x+i))
+                ListOfMoves.append((y + i, x + i))
             except IndexError:
                 break
         for i in range(1, 8):
             try:
-                if x-i < 0:
+                if x - i < 0:
                     break
-                if board[y+i][x-i] is not None:
-                    if board[y+i][x-i].white != self.white:
-                        ListOfMoves.append((y+i, x-i))
+                if board[y + i][x - i] is not None:
+                    if board[y + i][x - i].white != self.white:
+                        ListOfMoves.append((y + i, x - i))
                     break
-                ListOfMoves.append((y+i, x-i))
+                ListOfMoves.append((y + i, x - i))
             except IndexError:
                 break
         for i in range(1, 8):
             try:
                 if y - i < 0:
                     break
-                if board[y-i][x+i] is not None:
-                    if board[y-i][x+i].white != self.white:
-                        ListOfMoves.append((y-i, x+i))
+                if board[y - i][x + i] is not None:
+                    if board[y - i][x + i].white != self.white:
+                        ListOfMoves.append((y - i, x + i))
                     break
-                ListOfMoves.append((y-i, x+i))
+                ListOfMoves.append((y - i, x + i))
             except IndexError:
                 break
         return ListOfMoves
@@ -282,42 +298,42 @@ class Queen(Piece):
                     break
                 ListOfMoves.append((y, i))
         for i in range(1, 8):
-            if y-i < 0 or x-i < 0:
+            if y - i < 0 or x - i < 0:
                 break
-            if board[y-i][x-i] is not None:
-                if board[y-i][x-i].white != self.white:
-                    ListOfMoves.append((y-i, x-i))
+            if board[y - i][x - i] is not None:
+                if board[y - i][x - i].white != self.white:
+                    ListOfMoves.append((y - i, x - i))
                 break
-            ListOfMoves.append((y-i, x-i))
+            ListOfMoves.append((y - i, x - i))
         for i in range(1, 8):
             try:
-                if board[y+i][x+i] is not None:
-                    if board[y+i][x+i].white != self.white:
-                        ListOfMoves.append((y+i, x+i))
+                if board[y + i][x + i] is not None:
+                    if board[y + i][x + i].white != self.white:
+                        ListOfMoves.append((y + i, x + i))
                     break
-                ListOfMoves.append((y+i, x+i))
+                ListOfMoves.append((y + i, x + i))
             except IndexError:
                 break
         for i in range(1, 8):
             try:
-                if x-i < 0:
+                if x - i < 0:
                     break
-                if board[y+i][x-i] is not None:
-                    if board[y+i][x-i].white != self.white:
-                        ListOfMoves.append((y+i, x-i))
+                if board[y + i][x - i] is not None:
+                    if board[y + i][x - i].white != self.white:
+                        ListOfMoves.append((y + i, x - i))
                     break
-                ListOfMoves.append((y+i, x-i))
+                ListOfMoves.append((y + i, x - i))
             except IndexError:
                 break
         for i in range(1, 8):
             try:
                 if y - i < 0:
                     break
-                if board[y-i][x+i] is not None:
-                    if board[y-i][x+i].white != self.white:
-                        ListOfMoves.append((y-i, x+i))
+                if board[y - i][x + i] is not None:
+                    if board[y - i][x + i].white != self.white:
+                        ListOfMoves.append((y - i, x + i))
                     break
-                ListOfMoves.append((y-i, x+i))
+                ListOfMoves.append((y - i, x + i))
             except IndexError:
                 break
         return ListOfMoves
@@ -332,6 +348,7 @@ class King(Piece):
             self.pieceimage = spritesheet[BLACK_KING]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
         self.danger = pyglet.sprite.Sprite(dangerImg, x * 75, y * 75)
+        # Add check effect
         self.danger.visible = False
         self.moved = False
 
@@ -355,6 +372,7 @@ class King(Piece):
         self.moved = True
 
     def CheckCastling(self, board, right=True):
+        # Check castling
         y = self.piecesprite.y // 75
         if right:
             for row in board:
@@ -373,40 +391,41 @@ class King(Piece):
         return True
 
     def GetThreatSquares(self, board):
+        # All possible moves
         x = self.piecesprite.x // 75
         y = self.piecesprite.y // 75
         ListOfMoves = []
         try:
-            if x > 0 and (board[y+1][x-1] is None or self.white != board[y+1][x-1].white):
-                ListOfMoves.append((y+1, x-1))
+            if x > 0 and (board[y + 1][x - 1] is None or self.white != board[y + 1][x - 1].white):
+                ListOfMoves.append((y + 1, x - 1))
         except IndexError:
             pass
         try:
-            if board[y+1][x] is None or self.white != board[y+1][x].white:
-                ListOfMoves.append((y+1, x))
+            if board[y + 1][x] is None or self.white != board[y + 1][x].white:
+                ListOfMoves.append((y + 1, x))
         except IndexError:
             pass
         try:
-            if board[y+1][x+1] is None or self.white != board[y+1][x+1].white:
-                ListOfMoves.append((y+1, x+1))
+            if board[y + 1][x + 1] is None or self.white != board[y + 1][x + 1].white:
+                ListOfMoves.append((y + 1, x + 1))
         except IndexError:
             pass
         try:
-            if board[y][x+1] is None or self.white != board[y][x+1].white:
-                ListOfMoves.append((y, x+1))
+            if board[y][x + 1] is None or self.white != board[y][x + 1].white:
+                ListOfMoves.append((y, x + 1))
         except IndexError:
             pass
         try:
-            if y > 0 and (board[y-1][x+1] is None or self.white != board[y-1][x+1].white):
-                ListOfMoves.append((y-1, x+1))
+            if y > 0 and (board[y - 1][x + 1] is None or self.white != board[y - 1][x + 1].white):
+                ListOfMoves.append((y - 1, x + 1))
         except IndexError:
             pass
-        if y > 0 and (board[y-1][x] is None or self.white != board[y-1][x].white):
-            ListOfMoves.append((y-1, x))
-        if y > 0 and x > 0 and (board[y-1][x-1] is None or self.white != board[y-1][x-1].white):
-            ListOfMoves.append((y-1, x-1))
-        if x > 0 and (board[y][x-1] is None or self.white != board[y][x-1].white):
-            ListOfMoves.append((y, x-1))
+        if y > 0 and (board[y - 1][x] is None or self.white != board[y - 1][x].white):
+            ListOfMoves.append((y - 1, x))
+        if y > 0 and x > 0 and (board[y - 1][x - 1] is None or self.white != board[y - 1][x - 1].white):
+            ListOfMoves.append((y - 1, x - 1))
+        if x > 0 and (board[y][x - 1] is None or self.white != board[y][x - 1].white):
+            ListOfMoves.append((y, x - 1))
         return ListOfMoves
 
     def Draw(self):
@@ -414,6 +433,7 @@ class King(Piece):
         self.danger.draw()
 
     def InCheck(self, board):
+        # Check if kink is in check
         x = self.piecesprite.x // 75
         y = self.piecesprite.y // 75
         for row in board:
@@ -425,8 +445,10 @@ class King(Piece):
         return False
 
     def GetValidMoves(self, board, king):
+        # All possible moves
         y = self.piecesprite.y // 75
         ListOfMoves = self.GetThreatSquares(board)
+        # All valid moves
         ValidMoves = []
         for move in ListOfMoves:
             if not self.MakeMove(board, move, king):
@@ -435,13 +457,15 @@ class King(Piece):
             if type(board[y][7]) is Rook and not board[y][7].moved and board[y][5] is None and board[y][6] is None:
                 if self.CheckCastling(board):
                     ValidMoves.append((y, 6))
-            if type(board[y][0]) is Rook and not board[y][0].moved and board[y][3] is None and board[y][2] is None and board[y][1] is None:
+            if type(board[y][0]) is Rook and not board[y][0].moved and board[y][3] is None and board[y][2] is None and \
+                    board[y][1] is None:
                 print("left condition working")
                 if self.CheckCastling(board, False):
                     ValidMoves.append((y, 2))
         return ValidMoves
 
     def NoValidMoves(self, board):
+        # Check if there's possible moves.
         x = self.piecesprite.x // 75
         y = self.piecesprite.y // 75
         for row in board:
