@@ -1,17 +1,20 @@
 import pyglet
 from pyglet.window import mouse
 import Pieces as p
+import resources
 
 
 class Chess(pyglet.window.Window):
-    chessboard = pyglet.resource.image('resources/chessboard.png')
-    validImg = pyglet.resource.image('resources/validmove.png')
+
+    chessboard = resources.chessboard
+    validImg = resources.validImg
     # hoverImg = pyglet.resource.image('resources/hoversquare.png')
-    promoImg = pyglet.resource.image('resources/promotion.png')
+    promoImg = resources.promoImg
     currentPos = (-1, -1)
     move = True  # White if true, Black if false
     promotion = False
-    spriteimage = pyglet.resource.image('resources/spritesheet.png')
+
+    spriteimage = resources.spriteimage
     spritesheet = pyglet.image.ImageGrid(spriteimage, 2, 6)
 
     def __init__(self):

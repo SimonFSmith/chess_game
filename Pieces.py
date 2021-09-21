@@ -1,10 +1,6 @@
 import pyglet
+import resources
 
-# Ressources
-
-spriteimage = pyglet.resource.image('resources/spritesheet.png')
-spritesheet = pyglet.image.ImageGrid(spriteimage, 2, 6)
-dangerImg = pyglet.resource.image('resources/danger.png')
 
 # Add id to piece
 BLACK_KING, BLACK_QUEEN, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK, BLACK_PAWN, WHITE_KING, WHITE_QUEEN, WHITE_BISHOP, \
@@ -70,9 +66,9 @@ class Pawn(Piece):
         # Initialize pawn's image
         super(Pawn, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_PAWN]
+            self.pieceimage = resources.spritesheet[WHITE_PAWN]
         else:
-            self.pieceimage = spritesheet[BLACK_PAWN]
+            self.pieceimage = resources.spritesheet[BLACK_PAWN]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
 
     def GetThreatSquares(self, board):
@@ -105,9 +101,9 @@ class Rook(Piece):
     def __init__(self, x, y, type=True):
         super(Rook, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_ROOK]
+            self.pieceimage = resources.spritesheet[WHITE_ROOK]
         else:
-            self.pieceimage = spritesheet[BLACK_ROOK]
+            self.pieceimage = resources.spritesheet[BLACK_ROOK]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
         self.moved = False
 
@@ -155,9 +151,9 @@ class Knight(Piece):
     def __init__(self, x, y, type=True):
         super(Knight, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_KNIGHT]
+            self.pieceimage = resources.spritesheet[WHITE_KNIGHT]
         else:
-            self.pieceimage = spritesheet[BLACK_KNIGHT]
+            self.pieceimage = resources.spritesheet[BLACK_KNIGHT]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
 
     def GetThreatSquares(self, board):
@@ -205,9 +201,9 @@ class Bishop(Piece):
     def __init__(self, x, y, type=True):
         super(Bishop, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_BISHOP]
+            self.pieceimage = resources.spritesheet[WHITE_BISHOP]
         else:
-            self.pieceimage = spritesheet[BLACK_BISHOP]
+            self.pieceimage = resources.spritesheet[BLACK_BISHOP]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
 
     def GetThreatSquares(self, board):
@@ -260,9 +256,9 @@ class Queen(Piece):
     def __init__(self, x, y, type=True):
         super(Queen, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_QUEEN]
+            self.pieceimage = resources.spritesheet[WHITE_QUEEN]
         else:
-            self.pieceimage = spritesheet[BLACK_QUEEN]
+            self.pieceimage = resources.spritesheet[BLACK_QUEEN]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
 
     def GetThreatSquares(self, board):
@@ -343,11 +339,11 @@ class King(Piece):
     def __init__(self, x, y, type=True):
         super(King, self).__init__(type)
         if self.white:
-            self.pieceimage = spritesheet[WHITE_KING]
+            self.pieceimage = resources.spritesheet[WHITE_KING]
         else:
-            self.pieceimage = spritesheet[BLACK_KING]
+            self.pieceimage = resources.spritesheet[BLACK_KING]
         self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
-        self.danger = pyglet.sprite.Sprite(dangerImg, x * 75, y * 75)
+        self.danger = pyglet.sprite.Sprite(resources.dangerImg, x * 75, y * 75)
         # Add check effect
         self.danger.visible = False
         self.moved = False
