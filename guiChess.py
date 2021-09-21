@@ -117,7 +117,7 @@ class Chess(pyglet.window.Window):
                 boardX = x//75
                 boardY = y//75
                 if self.currentPos[0] < 0 and self.currentPos[1] < 0:  # Goes inside because it's initialized with -1, -1
-                    if self.board[boardY][boardX] is not None and self.move == self.board[boardY][boardX].white:  # If there's a click and player's turn is white
+                    if self.board[boardY][boardX] is not None and self.move == self.board[boardY][boardX].white:  # If there's a click from your side
                         self.currentPos = (boardY, boardX)  # Current position becomes the clicked one
                         if self.move:  # If white
                             ValidMoves = self.board[boardY][boardX].GetValidMoves(self.board, self.wKing)  # Put the white's valid move inside the variable
@@ -128,7 +128,7 @@ class Chess(pyglet.window.Window):
                         else:  # If there are possible moves
                             for move in ValidMoves:  # For each move inside the variable
                                 self.validsprites[move[0]][move[1]].visible = True  # Display possible moves
-                elif self.board[boardY][boardX] is not None and self.move == self.board[boardY][boardX].white:  # If there's a click and player's turn is white
+                elif self.board[boardY][boardX] is not None and self.move == self.board[boardY][boardX].white:  # If you have a piece selected and you wanna select another one
                     # Remove past move posibilities
                     for row in self.validsprites:
                         for sprite in row:
@@ -143,7 +143,7 @@ class Chess(pyglet.window.Window):
                     else:  # If there are possible moves
                         for move in ValidMoves:  # For each move inside the variable
                             self.validsprites[move[0]][move[1]].visible = True  # Display possible moves
-                else:
+                else:  # Making the move
                     if self.validsprites[boardY][boardX].visible:  # If possible moves visible
                         self.board[boardY][boardX] = self.board[self.currentPos[0]][self.currentPos[1]]
                         self.board[self.currentPos[0]][self.currentPos[1]].ChangeLocation(boardX, boardY, self.board)  # Board takes the current position
