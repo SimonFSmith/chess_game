@@ -9,131 +9,131 @@ class King(Piece):
     def __init__(self, x, y, type=True):
         super(King, self).__init__(type)
         if self.white:
-            self.pieceimage = resources.spritesheet[WHITE_KING]
+            self.piece_image = resources.sprite_sheet[WHITE_KING]
         else:
-            self.pieceimage = resources.spritesheet[BLACK_KING]
-        self.piecesprite = pyglet.sprite.Sprite(self.pieceimage, x * 75, y * 75)
-        self.danger = pyglet.sprite.Sprite(resources.dangerImg, x * 75, y * 75)
+            self.piece_image = resources.sprite_sheet[BLACK_KING]
+        self.piece_sprite = pyglet.sprite.Sprite(self.piece_image, x * 75, y * 75)
+        self.danger = pyglet.sprite.Sprite(resources.danger_img, x * 75, y * 75)
         self.danger.visible = False  # Add check effect
         self.moved = False
 
-    def ChangeLocation(self, x, y, board):
-        if x == self.piecesprite.x // 75 + 2:
-            board[y][7].ChangeLocation(5, y, board)
+    def change_location(self, x, y, board):
+        if x == self.piece_sprite.x // 75 + 2:
+            board[y][7].change_location(5, y, board)
             board[y][5] = board[y][7]
             board[y][7] = None
             board[y][6] = self
             board[y][4] = None
-        elif x == self.piecesprite.x // 75 - 2:
-            board[y][0].ChangeLocation(3, y, board)
+        elif x == self.piece_sprite.x // 75 - 2:
+            board[y][0].change_location(3, y, board)
             board[y][3] = board[y][0]
             board[y][0] = None
             board[y][2] = self
             board[y][4] = None
-        self.piecesprite.x = x * 75
-        self.piecesprite.y = y * 75
+        self.piece_sprite.x = x * 75
+        self.piece_sprite.y = y * 75
         self.danger.x = x * 75
         self.danger.y = y * 75
         self.moved = True
 
     # Check castling
-    def CheckCastling(self, board, right=True):
-        y = self.piecesprite.y // 75
+    def check_castling(self, board, right=True):
+        y = self.piece_sprite.y // 75
         if right:
             for row in board:
                 for piece in row:
                     if piece is not None and piece.white != self.white:
-                        ValidMoves = piece.GetThreatSquares(board)
-                        if (y, 5) in ValidMoves or (y, 6) in ValidMoves or (y, 4) in ValidMoves:
+                        valid_moves = piece.get_threat_squares(board)
+                        if (y, 5) in valid_moves or (y, 6) in valid_moves or (y, 4) in valid_moves:
                             return False
         else:
             for row in board:
                 for piece in row:
                     if piece is not None and piece.white != self.white:
-                        ValidMoves = piece.GetThreatSquares(board)
-                        if (y, 4) in ValidMoves or (y, 3) in ValidMoves or (y, 2) in ValidMoves:
+                        valid_moves = piece.get_threat_squares(board)
+                        if (y, 4) in valid_moves or (y, 3) in valid_moves or (y, 2) in valid_moves:
                             return False
         return True
 
     # All possible moves
-    def GetThreatSquares(self, board):
-        x = self.piecesprite.x // 75
-        y = self.piecesprite.y // 75
-        ListOfMoves = []
+    def get_threat_squares(self, board):
+        x = self.piece_sprite.x // 75
+        y = self.piece_sprite.y // 75
+        list_of_moves = []
         try:
             if x > 0 and (board[y + 1][x - 1] is None or self.white != board[y + 1][x - 1].white):
-                ListOfMoves.append((y + 1, x - 1))
+                list_of_moves.append((y + 1, x - 1))
         except IndexError:
             pass
         try:
             if board[y + 1][x] is None or self.white != board[y + 1][x].white:
-                ListOfMoves.append((y + 1, x))
+                list_of_moves.append((y + 1, x))
         except IndexError:
             pass
         try:
             if board[y + 1][x + 1] is None or self.white != board[y + 1][x + 1].white:
-                ListOfMoves.append((y + 1, x + 1))
+                list_of_moves.append((y + 1, x + 1))
         except IndexError:
             pass
         try:
             if board[y][x + 1] is None or self.white != board[y][x + 1].white:
-                ListOfMoves.append((y, x + 1))
+                list_of_moves.append((y, x + 1))
         except IndexError:
             pass
         try:
             if y > 0 and (board[y - 1][x + 1] is None or self.white != board[y - 1][x + 1].white):
-                ListOfMoves.append((y - 1, x + 1))
+                list_of_moves.append((y - 1, x + 1))
         except IndexError:
             pass
         if y > 0 and (board[y - 1][x] is None or self.white != board[y - 1][x].white):
-            ListOfMoves.append((y - 1, x))
+            list_of_moves.append((y - 1, x))
         if y > 0 and x > 0 and (board[y - 1][x - 1] is None or self.white != board[y - 1][x - 1].white):
-            ListOfMoves.append((y - 1, x - 1))
+            list_of_moves.append((y - 1, x - 1))
         if x > 0 and (board[y][x - 1] is None or self.white != board[y][x - 1].white):
-            ListOfMoves.append((y, x - 1))
-        return ListOfMoves
+            list_of_moves.append((y, x - 1))
+        return list_of_moves
 
-    def Draw(self):
-        self.piecesprite.draw()
+    def draw(self):
+        self.piece_sprite.draw()
         self.danger.draw()
 
     # Check if king is in check
-    def InCheck(self, board):
-        x = self.piecesprite.x // 75
-        y = self.piecesprite.y // 75
+    def in_check(self, board):
+        x = self.piece_sprite.x // 75
+        y = self.piece_sprite.y // 75
         for row in board:
             for piece in row:
                 if piece is not None and piece.white != self.white:
-                    validmoves = piece.GetThreatSquares(board)
-                    if (y, x) in validmoves:
+                    valid_moves = piece.get_threat_squares(board)
+                    if (y, x) in valid_moves:
                         return True
         return False
 
-    def GetValidMoves(self, board, king):
-        y = self.piecesprite.y // 75
-        ListOfMoves = self.GetThreatSquares(board)  # All possible moves
-        ValidMoves = []  # All valid moves
-        for move in ListOfMoves:
-            if not self.MakeMove(board, move, king):
-                ValidMoves.append(move)
+    def get_valid_moves(self, board, king):
+        y = self.piece_sprite.y // 75
+        list_of_moves = self.get_threat_squares(board)  # All possible moves
+        valid_moves = []  # All valid moves
+        for move in list_of_moves:
+            if not self.make_move(board, move, king):
+                valid_moves.append(move)
         if not self.moved:
             if type(board[y][7]) is Rook and not board[y][7].moved and board[y][5] is None and board[y][6] is None:
-                if self.CheckCastling(board):
-                    ValidMoves.append((y, 6))
+                if self.check_castling(board):
+                    valid_moves.append((y, 6))
             if type(board[y][0]) is Rook and not board[y][0].moved and board[y][3] is None and board[y][2] is None and \
                     board[y][1] is None:
-                if self.CheckCastling(board, False):
-                    ValidMoves.append((y, 2))
-        return ValidMoves
+                if self.check_castling(board, False):
+                    valid_moves.append((y, 2))
+        return valid_moves
 
     # Check if there's possible moves.
-    def NoValidMoves(self, board):
-        x = self.piecesprite.x // 75
-        y = self.piecesprite.y // 75
+    def no_valid_moves(self, board):
+        x = self.piece_sprite.x // 75
+        y = self.piece_sprite.y // 75
         for row in board:
             for piece in row:
                 if piece is not None and piece.white == self.white:
-                    validmoves = piece.GetValidMoves(board, self)
-                    if len(validmoves) > 0:
+                    valid_moves = piece.get_valid_moves(board, self)
+                    if len(valid_moves) > 0:
                         return False
         return True
