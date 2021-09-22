@@ -1,4 +1,4 @@
-from guiChess import Chess, pyglet
+from gui_chess import Chess, pyglet
 
 
 def main():
