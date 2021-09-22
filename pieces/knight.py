@@ -8,9 +8,9 @@ class Knight(Piece):
     def __init__(self, x, y, type=True):
         super(Knight, self).__init__(type)
         if self.white:
-            self.piece_image = resources.spritesheet[WHITE_KNIGHT]
+            self.piece_image = resources.sprite_sheet[WHITE_KNIGHT]
         else:
-            self.piece_image = resources.spritesheet[BLACK_KNIGHT]
+            self.piece_image = resources.sprite_sheet[BLACK_KNIGHT]
         self.piece_sprite = pyglet.sprite.Sprite(self.piece_image, x * 75, y * 75)
 
     def get_threat_squares(self, board):
