@@ -6,7 +6,7 @@ WHITE_KNIGHT, WHITE_ROOK, WHITE_PAWN = range(12)
 class Piece(object):
     # Attributes
     white = True
-    piecesprite = None
+    piece_sprite = None
     captured = False
 
     # Constructor
@@ -15,36 +15,36 @@ class Piece(object):
         self.captured = False
 
     # Manage pieces' moves
-    def MakeMove(self, board, move, king):
-        x = self.piecesprite.x // 75
-        y = self.piecesprite.y // 75
+    def make_move(self, board, move, king):
+        x = self.piece_sprite.x // 75
+        y = self.piece_sprite.y // 75
         temp = board[y][x]
         temp2 = board[move[0]][move[1]]
         board[move[0]][move[1]] = board[y][x]
         board[y][x] = None
-        self.piecesprite.x = move[1] * 75
-        self.piecesprite.y = move[0] * 75
-        check = king.InCheck(board)
+        self.piece_sprite.x = move[1] * 75
+        self.piece_sprite.y = move[0] * 75
+        check = king.in_check(board)
         board[move[0]][move[1]] = temp2
         board[y][x] = temp
-        self.piecesprite.x = x * 75
-        self.piecesprite.y = y * 75
+        self.piece_sprite.x = x * 75
+        self.piece_sprite.y = y * 75
         return check
 
-    def GetValidMoves(self, board, king):
-        ListOfMoves = self.GetThreatSquares(board)  # All moves possible
-        ValidMoves = []  # All valid moves
-        for move in ListOfMoves:
-            # tempboard = deepcopy(board) Can be optimized. Edit MakeMove function to simply revert any changes
-            if not self.MakeMove(board, move, king):
-                ValidMoves.append(move)  # Add possible move to list
-        return ValidMoves
+    def get_valid_moves(self, board, king):
+        list_of_moves = self.get_threat_squares(board)  # All moves possible
+        valid_moves = []  # All valid moves
+        for move in list_of_moves:
+            # tempboard = deepcopy(board) Can be optimized. Edit make_move function to simply revert any changes
+            if not self.make_move(board, move, king):
+                valid_moves.append(move)  # Add possible move to list
+        return valid_moves
 
     # Change piece's graphical position
-    def ChangeLocation(self, x, y, board):
-        self.piecesprite.x = x * 75
-        self.piecesprite.y = y * 75
+    def change_location(self, x, y, board):
+        self.piece_sprite.x = x * 75
+        self.piece_sprite.y = y * 75
 
     # Draw piece on initialization
-    def Draw(self):
-        self.piecesprite.draw()
+    def draw(self):
+        self.piece_sprite.draw()
