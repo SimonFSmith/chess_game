@@ -66,7 +66,7 @@ class Chess(pyglet.window.Window):
         self.chessboard.blit(0, 0)
         for i in range(8):
             for j in range(8):
-                if self.board[i][j] is not None: self.board[i][j].Draw()
+                if self.board[i][j] is not None: self.board[i][j].draw()
                 self.valid_sprites[i][j].draw()
         # Display of the promotion rectangle
         if self.promotion:
@@ -162,7 +162,7 @@ class Chess(pyglet.window.Window):
                 else:  # Making the move
                     if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
                         self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
-                        self.board[self.current_pos[0]][self.current_pos[1]].ChangeLocation(board_x, board_y,
+                        self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x, board_y,
                                                                                           self.board)  # Board takes the current position
                         if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
                                 board_y == 0 or board_y == 7):  # Check if there's a pawn at top or bottom
