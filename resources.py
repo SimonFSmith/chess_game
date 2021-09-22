@@ -1,15 +1,15 @@
 import pyglet
 
-spriteimage = pyglet.resource.image('resources/spritesheet.png')
+sprite_image = pyglet.resource.image('resources/spritesheet.png')
 
-spritesheet = pyglet.image.ImageGrid(spriteimage, 2, 6)
+sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
 
-dangerImg = pyglet.resource.image('resources/danger.png')
+danger_img = pyglet.resource.image('resources/danger.png')
 
 chessboard = pyglet.resource.image('resources/chessboard.png')
-validImg = pyglet.resource.image('resources/validmove.png')
-promoImg = pyglet.resource.image('resources/promotion.png')
+valid_img = pyglet.resource.image('resources/validmove.png')
+promo_img = pyglet.resource.image('resources/promotion.png')
 
-spriteimage = pyglet.resource.image('resources/spritesheet.png')
+sprite_image = pyglet.resource.image('resources/spritesheet.png')
 
-spritesheet = pyglet.image.ImageGrid(spriteimage, 2, 6)
+sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
