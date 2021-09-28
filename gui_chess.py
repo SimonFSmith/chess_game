@@ -10,23 +10,6 @@ from pieces.queen import Queen
 from pieces.rook import Rook
 
 
-def position_notation(self):
-    position_notation = {"Position": [], "Notation": []}
-    for i in range(8):
-        for j in range(8):
-            position_notation["Position"].append(f"{i}{j}")
-            lettre = ""
-            if i == 0: lettre = "a"
-            elif i == 1: lettre = "b"
-            elif i == 2: lettre = "c"
-            elif i == 3: lettre = "d"
-            elif i == 4: lettre = "e"
-            elif i == 5: lettre = "f"
-            elif i == 6: lettre = "g"
-            elif i == 7: lettre = "h"
-            position_notation["Notation"].append(f"{lettre}{j + 1}")
-    return position_notation
-
 class Chess(pyglet.window.Window):
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -35,7 +18,16 @@ class Chess(pyglet.window.Window):
     move = True  # White if true, Black if false
     promotion = False
     _history = []
-    _position_notation = position_notation()
+    _position_notation = {'00': 'a1', '01': 'a2', '02': 'a3', '03': 'a4', '04': 'a5', '05': 'a6', '06': 'a7',
+                          '07': 'a8', '10': 'b1', '11': 'b2', '12': 'b3', '13': 'b4', '14': 'b5', '15': 'b6',
+                          '16': 'b7', '17': 'b8', '20': 'c1', '21': 'c2', '22': 'c3', '23': 'c4', '24': 'c5',
+                          '25': 'c6', '26': 'c7', '27': 'c8', '30': 'd1', '31': 'd2', '32': 'd3', '33': 'd4',
+                          '34': 'd5', '35': 'd6', '36': 'd7', '37': 'd8', '40': 'e1', '41': 'e2', '42': 'e3',
+                          '43': 'e4', '44': 'e5', '45': 'e6', '46': 'e7', '47': 'e8', '50': 'f1', '51': 'f2',
+                          '52': 'f3', '53': 'f4', '54': 'f5', '55': 'f6', '56': 'f7', '57': 'f8', '60': 'g1',
+                          '61': 'g2', '62': 'g3', '63': 'g4', '64': 'g5', '65': 'g6', '66': 'g7', '67': 'g8',
+                          '70': 'h1', '71': 'h2', '72': 'h3', '73': 'h4', '74': 'h5', '75': 'h6', '76': 'h7',
+                          '77': 'h8'}
 
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
@@ -102,6 +94,7 @@ class Chess(pyglet.window.Window):
                 self.white_knight.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        _moved_piece = None
         if self.promotion:  # If there is a promotion
             if button == mouse.LEFT:
                 if 225 < y < 300:
@@ -188,6 +181,8 @@ class Chess(pyglet.window.Window):
                         self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
                         self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x, board_y,
                                                                                              self.board)  # Board takes the current position
+                        _moved_piece = self.board[board_y][board_x]
+
                         if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
                                 board_y == 0 or board_y == 7):  # Check if there's a pawn at top or bottom
                             self.promotion = True  # Makes the promotion
@@ -222,7 +217,7 @@ class Chess(pyglet.window.Window):
 
                     # Adds previous move to history
                     self.add_move_to_history(self.move,  # Player's turn
-                                             self.board[self.current_pos[0]][self.current_pos[1]],  # Piece
+                                             _moved_piece,  # Piece
                                              board_x, board_y)  # End position
                     print(self.format_move())
 
@@ -238,7 +233,6 @@ class Chess(pyglet.window.Window):
         _move = self._history[_index]
         _color = "B" if _move["color"] else "W"
         _piece = _move["piece"].__class__.__name__[0]
-        _position_x = _move["position_x"]
-        _position_y = _move["position_y"]
+        _position = self._position_notation[str(_move["position_x"]) + str(_move["position_y"])]
 
-        return _color + _piece + str(_position_x) + str(_position_y)
+        return _color + _piece + _position
