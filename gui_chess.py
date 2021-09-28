@@ -10,6 +10,23 @@ from pieces.queen import Queen
 from pieces.rook import Rook
 
 
+def position_notation(self):
+    position_notation = {"Position": [], "Notation": []}
+    for i in range(8):
+        for j in range(8):
+            position_notation["Position"].append(f"{i}{j}")
+            lettre = ""
+            if i == 0: lettre = "a"
+            elif i == 1: lettre = "b"
+            elif i == 2: lettre = "c"
+            elif i == 3: lettre = "d"
+            elif i == 4: lettre = "e"
+            elif i == 5: lettre = "f"
+            elif i == 6: lettre = "g"
+            elif i == 7: lettre = "h"
+            position_notation["Notation"].append(f"{lettre}{j + 1}")
+    return position_notation
+
 class Chess(pyglet.window.Window):
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -18,7 +35,7 @@ class Chess(pyglet.window.Window):
     move = True  # White if true, Black if false
     promotion = False
     _history = []
-    _dict = {}
+    _position_notation = position_notation()
 
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
