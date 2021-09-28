@@ -17,6 +17,8 @@ class Chess(pyglet.window.Window):
     current_pos = (-1, -1)
     move = True  # White if true, Black if false
     promotion = False
+    _history = []
+    _dict = {}
 
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
@@ -88,17 +90,19 @@ class Chess(pyglet.window.Window):
                 if 225 < y < 300:
                     # A piece is chosen in fonction of where the player clicks
                     if 131.25 < x < 206.25:
-                        self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Queen(self.promo_pawn[1], self.promo_pawn[0],
-                                                                                 not self.move)
+                        self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Queen(self.promo_pawn[1],
+                                                                                   self.promo_pawn[0],
+                                                                                   not self.move)
                     elif 218.75 < x < 293.75:
-                        self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Rook(self.promo_pawn[1], self.promo_pawn[0],
-                                                                                not self.move)
+                        self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Rook(self.promo_pawn[1],
+                                                                                  self.promo_pawn[0],
+                                                                                  not self.move)
                     elif 306.25 < x < 381.25:
                         self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_Pawn[1],
-                                                                                  self.promo_pawn[0], not self.move)
+                                                                                    self.promo_pawn[0], not self.move)
                     elif 393.75 < x < 468.75:
                         self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
-                                                                                  self.promo_pawn[0], not self.move)
+                                                                                    self.promo_pawn[0], not self.move)
                 self.promo_pawn = (-1, -1)
                 self.promotion = False  # Promotion is done so it gets back to False
                 # Checkmate verification after a promotion
@@ -128,21 +132,24 @@ class Chess(pyglet.window.Window):
             if button == mouse.LEFT:
                 board_x = x // 75
                 board_y = y // 75
-                if self.current_pos[0] < 0 and self.current_pos[1] < 0:  # Goes inside because it's initialized with -1, -1
-                    if self.board[board_y][board_x] is not None and self.move == self.board[board_y][board_x].white:  # If there's a click from your side
+                if self.current_pos[0] < 0 and self.current_pos[
+                    1] < 0:  # Goes inside because it's initialized with -1, -1
+                    if self.board[board_y][board_x] is not None and self.move == self.board[board_y][
+                        board_x].white:  # If there's a click from your side
                         self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
                         if self.move:  # If white
                             valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                  self.white_king)  # Put the white's valid move inside the variable
+                                                                                       self.white_king)  # Put the white's valid move inside the variable
                         else:  # If black
                             valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                  self.black_king)  # Put the blacks's valid move inside the variable
+                                                                                       self.black_king)  # Put the blacks's valid move inside the variable
                         if len(valid_moves) == 0:  # If there's no valid move
                             self.current_pos = (-1, -1)  # Nothing to show, position is reset
                         else:  # If there are possible moves
                             for move in valid_moves:  # For each move inside the variable
                                 self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
-                elif self.board[board_y][board_x] is not None and self.move == self.board[board_y][board_x].white:  # If you have a piece selected and you wanna select another one
+                elif self.board[board_y][board_x] is not None and self.move == self.board[board_y][
+                    board_x].white:  # If you have a piece selected and you wanna select another one
                     # Remove past move posibilities
                     for row in self.valid_sprites:
                         for sprite in row:
@@ -150,10 +157,10 @@ class Chess(pyglet.window.Window):
                     self.current_pos = (board_y, board_x)
                     if self.move:  # If it's white
                         valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                              self.white_king)  # Put the white's valid move inside the variable
+                                                                                   self.white_king)  # Put the white's valid move inside the variable
                     else:  # If it's black
                         valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                              self.black_king)  # Put the blacks's valid move inside the variable
+                                                                                   self.black_king)  # Put the blacks's valid move inside the variable
                     if len(valid_moves) == 0:  # If there's no valid move
                         self.current_pos = (-1, -1)  # Nothing to show, position is reset
                     else:  # If there are possible moves
@@ -163,7 +170,7 @@ class Chess(pyglet.window.Window):
                     if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
                         self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
                         self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x, board_y,
-                                                                                          self.board)  # Board takes the current position
+                                                                                             self.board)  # Board takes the current position
                         if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
                                 board_y == 0 or board_y == 7):  # Check if there's a pawn at top or bottom
                             self.promotion = True  # Makes the promotion
@@ -196,5 +203,25 @@ class Chess(pyglet.window.Window):
                             for sprite in row:
                                 sprite.visible = False  # Removes the move possibilities
 
+                    # Adds previous move to history
+                    self.add_move_to_history(self.move,  # Player's turn
+                                             self.board[self.current_pos[0]][self.current_pos[1]],  # Piece
+                                             board_x, board_y)  # End position
+                    print(self.format_move())
+
     def update(self, dt):
         self.on_draw()
+
+    # Adds move to history
+    def add_move_to_history(self, _color, _piece, _position_x, _position_y):
+        self._history.append({"color": _color, "piece": _piece, "position_x": _position_x, "position_y": _position_y})
+
+    # Formats move to respect chess notation
+    def format_move(self, _index: int = -1):
+        _move = self._history[_index]
+        _color = "B" if _move["color"] else "W"
+        _piece = _move["piece"].__class__.__name__[0]
+        _position_x = _move["position_x"]
+        _position_y = _move["position_y"]
+
+        return _color + _piece + str(_position_x) + str(_position_y)
