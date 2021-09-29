@@ -65,6 +65,7 @@ class Chess(pyglet.window.Window):
         self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225)
         self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225)
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
+
     def on_draw(self):
         # Board initialization
         self.clear()
@@ -207,27 +208,24 @@ class Chess(pyglet.window.Window):
                 if self.undo_y < y < (self.undo_y + self.undo_state.height):
                     if self.undo_x < x < (self.undo_x + self.undo_state.width):
                         self.change_color_press_button()
-                        print("test")
 
     def update_undo_vert(self, dt):
         self.undo_state = resources.undo_vert
 
-    def update_undo_noir(self, dt):
-        self.undo_state = resources.undo_noir
+    def update_undo_hover(self, dt):
+        self.undo_state = resources.undo_hover
 
     def change_color_press_button(self):
         pyglet.clock.schedule_once(self.update_undo_vert, 0.1)
-        pyglet.clock.schedule_once(self.update_undo_noir, 0.2)
+        pyglet.clock.schedule_once(self.update_undo_hover, 0.2)
 
-    # @window.event
-    # def on_mouse_motion(x, y, dx, dy):
-    #     # print(x, y, dx, dy)
-    #     image_width = sprite.image.get_max_width()
-    #     image_height = sprite.image.get_max_height()
-    #     if sprite.x + image_width > x > sprite.x and sprite.y + image_height > y > sprite.y:
-    #         print("mouse hover sprite")
-    #     else:
-    #         print("mouse leave sprite")
+    def on_mouse_motion(self, x, y, dx, dy):
+        # print(x, y, dx, dy)
+        if self.undo_x + self.undo_state.width > x > self.undo_x \
+                and self.undo_y + self.undo_state.height > y > self.undo_y:
+            self.undo_state = resources.undo_hover
+        else:
+            self.undo_state = resources.undo_noir
 
 
 
