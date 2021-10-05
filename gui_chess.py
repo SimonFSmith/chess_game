@@ -32,7 +32,7 @@ class Chess(pyglet.window.Window):
     rules_x = 840
     rules_y = 480
     stop_x = 610
-    stop_y = 10
+    stop_y = 350
 
     # History
     _history = History()
