@@ -232,32 +232,24 @@ class Chess(pyglet.window.Window):
 
 
     #fonction pour changer l'image du button. nécessaire pour le schedule_once
-    def update_undo_press(self, dt):
-        self.undo_state = resources.undo_button_press
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
-
-    def update_add_press(self, dt):
-        self.add_state = resources.add_button_press
     def update_add_hover(self, dt):
         self.add_state = resources.add_button_hover
-
-    def update_rules_press(self, dt):
-        self.rules_state = resources.rules_button_press
     def update_rules_hover(self, dt):
         self.rules_state = resources.rules_button_hover
 
     #fonction pour changer la couleur du boutton lors d'un clique
     def change_color_press_undo(self):
-        pyglet.clock.schedule_once(self.update_undo_press, 0.1)
+        self.undo_state = resources.undo_button_press
         pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
 
     def change_color_press_add(self):
-        pyglet.clock.schedule_once(self.update_add_press, 0.1)
+        self.add_state = resources.add_button_press
         pyglet.clock.schedule_once(self.update_add_hover, 0.17)
 
     def change_color_press_rules(self):
-        pyglet.clock.schedule_once(self.update_rules_press, 0.1)
+        self.rules_state = resources.rules_button_press
         pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
 
     #fonction pour détecter si la souris est au dessus d'un boutton
