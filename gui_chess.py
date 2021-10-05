@@ -24,12 +24,16 @@ class Chess(pyglet.window.Window):
     undo_state = resources.undo_button_black
     add_state = resources.add_button_black
     rules_state = resources.rules_button_black
+    stop_state = resources.stop_button_hover
     undo_x = 610
     undo_y = 478
     add_x = 720
     add_y = 480
     rules_x = 840
     rules_y = 480
+    stop_x = 610
+    stop_y = 10
+
     # History
     _history = History()
 
@@ -79,6 +83,7 @@ class Chess(pyglet.window.Window):
         self.undo_state.blit(self.undo_x, self.undo_y)
         self.add_state.blit(self.add_x, self.add_y)
         self.rules_state.blit(self.rules_x, self.rules_y)
+        self.stop_state.blit(self.stop_x, self.stop_y)
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] is not None: self.board[i][j].draw()
@@ -274,6 +279,11 @@ class Chess(pyglet.window.Window):
                     if self.rules_x < x < (self.rules_x + self.rules_state.width):
                         self.change_color_press_rules()
 
+                # si le button stop est appuyé
+                if self.stop_y < y < (self.stop_y + self.stop_state.height):
+                    if self.stop_x < x < (self.stop_x + self.stop_state.width):
+                        self.change_color_press_stop()
+
     #fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
@@ -281,6 +291,8 @@ class Chess(pyglet.window.Window):
         self.add_state = resources.add_button_hover
     def update_rules_hover(self, dt):
         self.rules_state = resources.rules_button_hover
+    def update_stop_hover(self, dt):
+        self.stop_state = resources.stop_button_hover
 
     #fonction pour changer la couleur du boutton lors d'un clique
     def change_color_press_undo(self):
@@ -294,6 +306,10 @@ class Chess(pyglet.window.Window):
     def change_color_press_rules(self):
         self.rules_state = resources.rules_button_press
         pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
+
+    def change_color_press_stop(self):
+        self.stop_state = resources.stop_button_press
+        pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
 
     #fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
@@ -318,6 +334,13 @@ class Chess(pyglet.window.Window):
             self.rules_state = resources.rules_button_hover
         else:
             self.rules_state = resources.rules_button_black
+
+        # button rules
+        if self.stop_x + self.stop_state.width > x > self.stop_x \
+                and self.stop_y + self.stop_state.height > y > self.stop_y:
+            self.stop_state = resources.stop_button_hover
+        else:
+            self.stop_state = resources.stop_button_black
 
     def update(self, dt):
         self.on_draw()
