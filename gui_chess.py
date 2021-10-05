@@ -275,7 +275,7 @@ class Chess(pyglet.window.Window):
     # Formats move to respect chess notation
     def format_move(self, _index: int = -1):
         _move = self._history[_index]
-        _str = "W" if _move["color"] else "B"  # Color
+        _str = ""
 
         if _move["castling"] is not None:  # If castling
             _str += "0-0" if _move["castling"] == "kingside" else "0-0-0"
