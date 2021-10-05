@@ -136,7 +136,7 @@ class Chess(pyglet.window.Window):
                         self.black_king.danger.visible = True
                         if self.black_king.no_valid_moves(self.board):  # If black king is in check with no valid moves
                             _checkmate = True
-                            print("Checkmate! White wins.")
+                            print("1-0")
                     if self.white_king.danger.visible:  # If white king danger image is visible
                         if not self.white_king.in_check(self.board):  # If white king is not in check
                             self.white_king.danger.visible = False  # Danger is not display anymore
@@ -148,7 +148,7 @@ class Chess(pyglet.window.Window):
                         self.white_king.danger.visible = True
                         if self.white_king.no_valid_moves(self.board):  # If white king is in check with no valid moves
                             _checkmate = True
-                            print("Checkmate! Black wins.")
+                            print("0-1")
                     if self.black_king.danger.visible:  # If black king danger image is visible
                         if not self.black_king.in_check(self.board):  # If black king is not in check
                             self.black_king.danger.visible = False  # Danger is not display anymore
@@ -225,7 +225,7 @@ class Chess(pyglet.window.Window):
                                 self.black_king.danger.visible = True
                                 if self.black_king.no_valid_moves(self.board):
                                     _checkmate = True
-                                    print("Checkmate! White wins.")
+                                    print("1-0")
                             if self.white_king.danger.visible:
                                 if not self.white_king.in_check(self.board):
                                     self.white_king.danger.visible = False
@@ -236,7 +236,7 @@ class Chess(pyglet.window.Window):
                                 self.white_king.danger.visible = True
                                 if self.white_king.no_valid_moves(self.board):
                                     _checkmate = True
-                                    print("Checkmate! Black wins.")
+                                    print("0-1")
                             if self.black_king.danger.visible:
                                 if not self.black_king.in_check(self.board):
                                     self.black_king.danger.visible = False
