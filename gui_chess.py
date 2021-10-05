@@ -94,7 +94,15 @@ class Chess(pyglet.window.Window):
                 self.white_knight.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        # Declaring variables for the history
+        _start_position_x = -1
+        _start_position_y = -1
         _moved_piece = None
+        _captured_piece = None
+        _end_position_x = 0
+        _end_position_y = 0
+        _promoted_pawn = None
+
         if self.promotion:  # If there is a promotion
             if button == mouse.LEFT:
                 if 225 < y < 300:
@@ -113,6 +121,8 @@ class Chess(pyglet.window.Window):
                     elif 393.75 < x < 468.75:
                         self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
                                                                                     self.promo_pawn[0], not self.move)
+
+                    _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
                 self.promo_pawn = (-1, -1)
                 self.promotion = False  # Promotion is done so it gets back to False
                 # Checkmate verification after a promotion
@@ -138,10 +148,18 @@ class Chess(pyglet.window.Window):
                     if self.black_king.danger.visible:  # If black king danger image is visible
                         if not self.black_king.in_check(self.board):  # If black king is not in check
                             self.black_king.danger.visible = False  # Danger is not display anymore
+
+            _last_move = self.get_move()
+            _last_move["promotion"] = _promoted_pawn
+            self.update_move(_last_move)
+            print(self.get_move())
+
         else:  # If there is not promotion
             if button == mouse.LEFT:
                 board_x = x // 75
                 board_y = y // 75
+                _end_position_x = board_x
+                _end_position_y = board_y
                 if self.current_pos[0] < 0 and self.current_pos[
                     1] < 0:  # Goes inside because it's initialized with -1, -1
                     if self.board[board_y][board_x] is not None and self.move == self.board[board_y][
@@ -178,6 +196,12 @@ class Chess(pyglet.window.Window):
                             self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
                 else:  # Making the move
                     if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
+                        # Saves the captured piece if there is
+                        if self.board[board_y][board_x] is not None:
+                            _captured_piece = self.board[board_y][board_x]
+
+                        _start_position_x = self.current_pos[1]
+                        _start_position_y = self.current_pos[0]
                         self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
                         self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x, board_y,
                                                                                              self.board)  # Board takes the current position
@@ -215,24 +239,37 @@ class Chess(pyglet.window.Window):
                             for sprite in row:
                                 sprite.visible = False  # Removes the move possibilities
 
-                    # Adds previous move to history
-                    self.add_move_to_history(self.move,  # Player's turn
-                                             _moved_piece,  # Piece
-                                             board_x, board_y)  # End position
-                    print(self.format_move())
+                        # Adds previous move to history
+                        if not self.promotion:
+                            self.add_move_to_history(self.move, _moved_piece, _captured_piece, _start_position_x,
+                                                     _start_position_y, _end_position_x, _end_position_y,
+                                                     _promoted_pawn)
+                            print(self.format_move())
 
     def update(self, dt):
         self.on_draw()
 
     # Adds move to history
-    def add_move_to_history(self, _color, _piece, _position_x, _position_y):
-        self._history.append({"color": _color, "piece": _piece, "position_x": _position_x, "position_y": _position_y})
+    def add_move_to_history(self, _color, _piece, _captured_piece, _start_position_x, _start_position_y,
+                            _end_position_x, _end_position_y, _promotion):
+        self._history.append(
+            {"color": _color, "piece": _piece, "captured_piece": _captured_piece, "start_position_x": _start_position_x,
+             "start_position_y": _start_position_y, "end_position_x": _end_position_x,
+             "end_position_y": _end_position_y, "promotion": _promotion})
+
+    def update_move(self, _updated_move, _index: int = -1):
+        self._history[_index] = _updated_move
+
+    def get_move(self, _index: int = -1):
+        return self._history[_index]
 
     # Formats move to respect chess notation
     def format_move(self, _index: int = -1):
+        # if captured piece is not none ...
         _move = self._history[_index]
         _color = "B" if _move["color"] else "W"
-        _piece = _move["piece"].__class__.__name__[0]
-        _position = self._position_notation[str(_move["position_x"]) + str(_move["position_y"])]
+        _piece_letter = _move["piece"].__class__.__name__[1].upper() if isinstance(_move["piece"], Knight) else \
+        _move["piece"].__class__.__name__[0]
+        _end_position = self._position_notation[str(_move["end_position_x"]) + str(_move["end_position_y"])]
 
-        return _color + _piece + _position
+        return _color + _piece_letter + ("x" if _move["captured_piece"] is not None else "") + _end_position
