@@ -4,16 +4,9 @@ from pieces.knight import Knight
 class History:
     def __init__(self):
         self._history = []
-        self._squares_name = {'00': 'a1', '01': 'a2', '02': 'a3', '03': 'a4', '04': 'a5', '05': 'a6', '06': 'a7',
-                              '07': 'a8', '10': 'b1', '11': 'b2', '12': 'b3', '13': 'b4', '14': 'b5', '15': 'b6',
-                              '16': 'b7', '17': 'b8', '20': 'c1', '21': 'c2', '22': 'c3', '23': 'c4', '24': 'c5',
-                              '25': 'c6', '26': 'c7', '27': 'c8', '30': 'd1', '31': 'd2', '32': 'd3', '33': 'd4',
-                              '34': 'd5', '35': 'd6', '36': 'd7', '37': 'd8', '40': 'e1', '41': 'e2', '42': 'e3',
-                              '43': 'e4', '44': 'e5', '45': 'e6', '46': 'e7', '47': 'e8', '50': 'f1', '51': 'f2',
-                              '52': 'f3', '53': 'f4', '54': 'f5', '55': 'f6', '56': 'f7', '57': 'f8', '60': 'g1',
-                              '61': 'g2', '62': 'g3', '63': 'g4', '64': 'g5', '65': 'g6', '66': 'g7', '67': 'g8',
-                              '70': 'h1', '71': 'h2', '72': 'h3', '73': 'h4', '74': 'h5', '75': 'h6', '76': 'h7',
-                              '77': 'h8'}
+        self._keys = []
+        self._values = []
+        self._squares_name = self.create_notations(self._keys, self._values)
 
     # Adds move to history
     def add_move_to_history(self, _color, _piece, _captured_piece, _start_position_x, _start_position_y,
@@ -60,3 +53,16 @@ class History:
                 _str += "#"  # Checkmate notation
 
         return _str
+
+    # Creates a dictionnary of squares name
+    def create_notations(self, keys, values):
+        for i in range(10):
+            for j in range(8):
+                keys.append(f'{i}{j}')
+
+        for i in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']:
+            for j in range(1, 9):
+                values.append(f'{i}{j}')
+
+        _position_notation = dict(zip(keys, values))
+        return _position_notation
