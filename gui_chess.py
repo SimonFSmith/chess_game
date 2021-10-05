@@ -293,10 +293,10 @@ class Chess(pyglet.window.Window):
                 _str += _move["promotion"].__class__.__name__[1].upper() if isinstance(_move["promotion"], Knight) else \
                     _move["promotion"].__class__.__name__[0]  # Promoted piece
 
-            if _move["check"]:
+            if _move["check"] and not _move["checkmate"]:
                 _str += "+"  # Check notation
 
             if _move["checkmate"]:
-                _str += "+"  # Checkmate notation
+                _str += "#"  # Checkmate notation
 
         return _str
