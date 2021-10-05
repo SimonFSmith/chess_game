@@ -102,6 +102,7 @@ class Chess(pyglet.window.Window):
         _end_position_x = 0
         _end_position_y = 0
         _promoted_pawn = None
+        _castling = False
 
         if self.promotion:  # If there is a promotion
             if button == mouse.LEFT:
@@ -202,8 +203,9 @@ class Chess(pyglet.window.Window):
                         _start_position_x = self.current_pos[1]
                         _start_position_y = self.current_pos[0]
                         self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
-                        self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x, board_y,
-                                                                                             self.board)  # Board takes the current position
+                        _castling = self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x,
+                                                                                                         board_y,
+                                                                                                         self.board)  # Board takes the current position
                         _moved_piece = self.board[board_y][board_x]
 
                         if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
@@ -241,7 +243,7 @@ class Chess(pyglet.window.Window):
                         # Adds previous move to history
                         self.add_move_to_history(not self.move, _moved_piece, _captured_piece, _start_position_x,
                                                  _start_position_y, board_x, board_y,
-                                                 _promoted_pawn)
+                                                 _promoted_pawn, _castling)
                         if not self.promotion:
                             print(self.format_move())
 
@@ -250,11 +252,11 @@ class Chess(pyglet.window.Window):
 
     # Adds move to history
     def add_move_to_history(self, _color, _piece, _captured_piece, _start_position_x, _start_position_y,
-                            _end_position_x, _end_position_y, _promotion):
+                            _end_position_x, _end_position_y, _promotion, _castling):
         self._history.append(
             {"color": _color, "piece": _piece, "captured_piece": _captured_piece, "start_position_x": _start_position_x,
              "start_position_y": _start_position_y, "end_position_x": _end_position_x,
-             "end_position_y": _end_position_y, "promotion": _promotion})
+             "end_position_y": _end_position_y, "promotion": _promotion, "castling": _castling})
 
     def update_move(self, _updated_move, _index: int = -1):
         self._history[_index] = _updated_move
@@ -264,21 +266,23 @@ class Chess(pyglet.window.Window):
 
     # Formats move to respect chess notation
     def format_move(self, _index: int = -1):
-        # if captured piece is not none ...
         _move = self._history[_index]
         _str = "W" if _move["color"] else "B"  # Color
 
-        if _move["promotion"] is None:
-            _str += _move["piece"].__class__.__name__[1].upper() if isinstance(_move["piece"], Knight) else \
-                _move["piece"].__class__.__name__[0]  # Moved piece
+        if _move["castling"] is not None:  # If castling
+            _str += "0-0" if _move["castling"] == "kingside" else "0-0-0"
+        else:  # If not
+            if _move["promotion"] is None:
+                _str += _move["piece"].__class__.__name__[1].upper() if isinstance(_move["piece"], Knight) else \
+                    _move["piece"].__class__.__name__[0]  # Moved piece
 
-        if _move["captured_piece"] is not None:
-            _str += "x"
+            if _move["captured_piece"] is not None:
+                _str += "x"  # Captures notation
 
-        _str += self._position_notation[str(_move["end_position_x"]) + str(_move["end_position_y"])]  # End position
+            _str += self._position_notation[str(_move["end_position_x"]) + str(_move["end_position_y"])]  # End position
 
-        if _move["promotion"] is not None:
-            _str += _move["promotion"].__class__.__name__[1].upper() if isinstance(_move["promotion"], Knight) else \
-                _move["promotion"].__class__.__name__[0]  # Promoted piece
+            if _move["promotion"] is not None:
+                _str += _move["promotion"].__class__.__name__[1].upper() if isinstance(_move["promotion"], Knight) else \
+                    _move["promotion"].__class__.__name__[0]  # Promoted piece
 
         return _str

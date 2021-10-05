@@ -17,24 +17,30 @@ class King(Piece):
         self.danger.visible = False  # Add check effect
         self.moved = False
 
+    # Castling
     def change_location(self, x, y, board):
-        if x == self.piece_sprite.x // 75 + 2:
+        _castling = None
+        if x == self.piece_sprite.x // 75 + 2:  # castling kingside
             board[y][7].change_location(5, y, board)
             board[y][5] = board[y][7]
             board[y][7] = None
             board[y][6] = self
             board[y][4] = None
-        elif x == self.piece_sprite.x // 75 - 2:
+            _castling = "kingside"
+        elif x == self.piece_sprite.x // 75 - 2:  # castling queenside
             board[y][0].change_location(3, y, board)
             board[y][3] = board[y][0]
             board[y][0] = None
             board[y][2] = self
             board[y][4] = None
+            _castling = "queenside"
         self.piece_sprite.x = x * 75
         self.piece_sprite.y = y * 75
         self.danger.x = x * 75
         self.danger.y = y * 75
         self.moved = True
+
+        return _castling
 
     # Check castling
     def check_castling(self, board, right=True):
