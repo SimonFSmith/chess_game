@@ -14,6 +14,15 @@ sprite_image = pyglet.resource.image('resources/spritesheet.png')
 
 sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
 
-undo_noir = pyglet.resource.image('resources/undo_noir.png')
-undo_vert = pyglet.resource.image('resources/undo_vert.png')
-undo_hover = pyglet.resource.image('resources/undo_hover.png')
+undo_button_black = pyglet.resource.image('resources/undo_button_black.png')
+undo_button_press = pyglet.resource.image('resources/undo_button_press.png')
+undo_button_hover = pyglet.resource.image('resources/undo_button_hover.png')
+
+add_button_black = pyglet.resource.image('resources/button_add_black.png')
+add_button_hover = pyglet.resource.image('resources/button_add_hover.png')
+add_button_press = pyglet.resource.image('resources/button_add_press.png')
+
+rules_button_black = pyglet.resource.image('resources/button_rules_black.png')
+rules_button_hover = pyglet.resource.image('resources/button_rules_hover.png')
+rules_button_press = pyglet.resource.image('resources/button_rules_press.png')
+

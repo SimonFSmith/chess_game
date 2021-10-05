@@ -15,13 +15,22 @@ class Chess(pyglet.window.Window):
     valid_img = resources.valid_img
     promo_img = resources.promo_img
 
-    undo_state = resources.undo_noir
+    undo_state = resources.undo_button_black
+    add_state = resources.add_button_black
+    rules_state = resources.rules_button_black
 
     current_pos = (-1, -1)
     move = True  # White if true, Black if false
     promotion = False
-    undo_y = 350
-    undo_x = 700
+
+    undo_x = 610
+    undo_y = 478
+
+    add_x = 720
+    add_y = 480
+
+    rules_x = 840
+    rules_y = 480
 
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
@@ -46,7 +55,6 @@ class Chess(pyglet.window.Window):
                       [Pawn(i, 6, False) for i in range(8)],
                       [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
                        self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
-        self.button_sprite = pyglet.sprite.Sprite(self.undo_state, x=135, y=135)
         # List containing images of the dot when it's possible to move
         self.valid_sprites = []
         for i in range(8):
@@ -71,6 +79,8 @@ class Chess(pyglet.window.Window):
         self.clear()
         self.chessboard.blit(0, 0)
         self.undo_state.blit(self.undo_x, self.undo_y)
+        self.add_state.blit(self.add_x, self.add_y)
+        self.rules_state.blit(self.rules_x, self.rules_y)
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] is not None: self.board[i][j].draw()
@@ -205,27 +215,74 @@ class Chess(pyglet.window.Window):
                                     sprite.visible = False  # Removes the move possibilities
         except IndexError:
             if button == mouse.LEFT:
+                #si le button undo est appuyé
                 if self.undo_y < y < (self.undo_y + self.undo_state.height):
                     if self.undo_x < x < (self.undo_x + self.undo_state.width):
-                        self.change_color_press_button()
+                        self.change_color_press_undo()
 
-    def update_undo_vert(self, dt):
-        self.undo_state = resources.undo_vert
+                # si le button add est appuyé
+                if self.add_y < y < (self.add_y + self.add_state.height):
+                    if self.add_x < x < (self.add_x + self.add_state.width):
+                        self.change_color_press_add()
 
+                # si le button add est appuyé
+                if self.rules_y < y < (self.rules_y + self.rules_state.height):
+                    if self.rules_x < x < (self.rules_x + self.rules_state.width):
+                        self.change_color_press_rules()
+
+
+    #fonction pour changer l'image du button. nécessaire pour le schedule_once
+    def update_undo_press(self, dt):
+        self.undo_state = resources.undo_button_press
     def update_undo_hover(self, dt):
-        self.undo_state = resources.undo_hover
+        self.undo_state = resources.undo_button_hover
 
-    def change_color_press_button(self):
-        pyglet.clock.schedule_once(self.update_undo_vert, 0.1)
-        pyglet.clock.schedule_once(self.update_undo_hover, 0.2)
+    def update_add_press(self, dt):
+        self.add_state = resources.add_button_press
+    def update_add_hover(self, dt):
+        self.add_state = resources.add_button_hover
 
+    def update_rules_press(self, dt):
+        self.rules_state = resources.rules_button_press
+    def update_rules_hover(self, dt):
+        self.rules_state = resources.rules_button_hover
+
+    #fonction pour changer la couleur du boutton lors d'un clique
+    def change_color_press_undo(self):
+        pyglet.clock.schedule_once(self.update_undo_press, 0.1)
+        pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
+
+    def change_color_press_add(self):
+        pyglet.clock.schedule_once(self.update_add_press, 0.1)
+        pyglet.clock.schedule_once(self.update_add_hover, 0.17)
+
+    def change_color_press_rules(self):
+        pyglet.clock.schedule_once(self.update_rules_press, 0.1)
+        pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
+
+    #fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
         # print(x, y, dx, dy)
+        #button undo
         if self.undo_x + self.undo_state.width > x > self.undo_x \
                 and self.undo_y + self.undo_state.height > y > self.undo_y:
-            self.undo_state = resources.undo_hover
+            self.undo_state = resources.undo_button_hover
         else:
-            self.undo_state = resources.undo_noir
+            self.undo_state = resources.undo_button_black
+
+        #button add
+        if self.add_x + self.add_state.width > x > self.add_x \
+                and self.add_y + self.add_state.height > y > self.add_y:
+            self.add_state = resources.add_button_hover
+        else:
+            self.add_state = resources.add_button_black
+
+        # button rules
+        if self.rules_x + self.rules_state.width > x > self.rules_x \
+                and self.rules_y + self.rules_state.height > y > self.rules_y:
+            self.rules_state = resources.rules_button_hover
+        else:
+            self.rules_state = resources.rules_button_black
 
 
 
