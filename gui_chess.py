@@ -2,6 +2,7 @@ import pyglet
 from pyglet.window import mouse
 
 import resources
+from history import History
 from pieces.bishop import Bishop
 from pieces.king import King
 from pieces.knight import Knight
@@ -17,17 +18,7 @@ class Chess(pyglet.window.Window):
     current_pos = (-1, -1)
     move = True  # White if true, Black if false
     promotion = False
-    _history = []
-    _position_notation = {'00': 'a1', '01': 'a2', '02': 'a3', '03': 'a4', '04': 'a5', '05': 'a6', '06': 'a7',
-                          '07': 'a8', '10': 'b1', '11': 'b2', '12': 'b3', '13': 'b4', '14': 'b5', '15': 'b6',
-                          '16': 'b7', '17': 'b8', '20': 'c1', '21': 'c2', '22': 'c3', '23': 'c4', '24': 'c5',
-                          '25': 'c6', '26': 'c7', '27': 'c8', '30': 'd1', '31': 'd2', '32': 'd3', '33': 'd4',
-                          '34': 'd5', '35': 'd6', '36': 'd7', '37': 'd8', '40': 'e1', '41': 'e2', '42': 'e3',
-                          '43': 'e4', '44': 'e5', '45': 'e6', '46': 'e7', '47': 'e8', '50': 'f1', '51': 'f2',
-                          '52': 'f3', '53': 'f4', '54': 'f5', '55': 'f6', '56': 'f7', '57': 'f8', '60': 'g1',
-                          '61': 'g2', '62': 'g3', '63': 'g4', '64': 'g5', '65': 'g6', '66': 'g7', '67': 'g8',
-                          '70': 'h1', '71': 'h2', '72': 'h3', '73': 'h4', '74': 'h5', '75': 'h6', '76': 'h7',
-                          '77': 'h8'}
+    _history = History()
 
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
@@ -153,10 +144,10 @@ class Chess(pyglet.window.Window):
                         if not self.black_king.in_check(self.board):  # If black king is not in check
                             self.black_king.danger.visible = False  # Danger is not display anymore
 
-            _last_move = self.get_move()
+            _last_move = self._history.get_move()
             _last_move["promotion"] = _promoted_pawn
-            self.update_move(_last_move)
-            print(self.format_move())
+            self._history.update_move(_last_move)
+            print(self._history.format_move())
 
         else:  # If there is not promotion
             if button == mouse.LEFT:
@@ -246,57 +237,13 @@ class Chess(pyglet.window.Window):
                                 sprite.visible = False  # Removes the move possibilities
 
                         # Adds previous move to history
-                        self.add_move_to_history(not self.move, _moved_piece, _captured_piece, _start_position_x,
-                                                 _start_position_y, board_x, board_y,
-                                                 _promoted_pawn, _castling,
-                                                 self.white_king.danger.visible if self.move else self.black_king.danger.visible,
-                                                 _checkmate)
+                        self._history.add_move_to_history(not self.move, _moved_piece, _captured_piece,
+                                                          _start_position_x, _start_position_y, board_x, board_y,
+                                                          _promoted_pawn, _castling,
+                                                          self.white_king.danger.visible if self.move else self.black_king.danger.visible,
+                                                          _checkmate)
                         if not self.promotion:
-                            print(self.format_move())
+                            print(self._history.format_move())
 
     def update(self, dt):
         self.on_draw()
-
-    # Adds move to history
-    def add_move_to_history(self, _color, _piece, _captured_piece, _start_position_x, _start_position_y,
-                            _end_position_x, _end_position_y, _promotion, _castling, _check, _checkmate):
-        self._history.append(
-            {"color": _color, "piece": _piece, "captured_piece": _captured_piece, "start_position_x": _start_position_x,
-             "start_position_y": _start_position_y, "end_position_x": _end_position_x,
-             "end_position_y": _end_position_y, "promotion": _promotion, "castling": _castling, "check": _check,
-             "checkmate": _checkmate})
-
-    def update_move(self, _updated_move, _index: int = -1):
-        self._history[_index] = _updated_move
-
-    def get_move(self, _index: int = -1):
-        return self._history[_index]
-
-    # Formats move to respect chess notation
-    def format_move(self, _index: int = -1):
-        _move = self._history[_index]
-        _str = ""
-
-        if _move["castling"] is not None:  # If castling
-            _str += "0-0" if _move["castling"] == "kingside" else "0-0-0"
-        else:  # If not
-            if _move["promotion"] is None:
-                _str += _move["piece"].__class__.__name__[1].upper() if isinstance(_move["piece"], Knight) else \
-                    _move["piece"].__class__.__name__[0]  # Moved piece
-
-            if _move["captured_piece"] is not None:
-                _str += "x"  # Captures notation
-
-            _str += self._position_notation[str(_move["end_position_x"]) + str(_move["end_position_y"])]  # End position
-
-            if _move["promotion"] is not None:
-                _str += _move["promotion"].__class__.__name__[1].upper() if isinstance(_move["promotion"], Knight) else \
-                    _move["promotion"].__class__.__name__[0]  # Promoted piece
-
-            if _move["check"] and not _move["checkmate"]:
-                _str += "+"  # Check notation
-
-            if _move["checkmate"]:
-                _str += "#"  # Checkmate notation
-
-        return _str
