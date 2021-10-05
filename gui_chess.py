@@ -243,7 +243,8 @@ class Chess(pyglet.window.Window):
                         # Adds previous move to history
                         self.add_move_to_history(not self.move, _moved_piece, _captured_piece, _start_position_x,
                                                  _start_position_y, board_x, board_y,
-                                                 _promoted_pawn, _castling)
+                                                 _promoted_pawn, _castling,
+                                                 self.white_king.danger.visible if self.move else self.black_king.danger.visible)
                         if not self.promotion:
                             print(self.format_move())
 
@@ -252,11 +253,11 @@ class Chess(pyglet.window.Window):
 
     # Adds move to history
     def add_move_to_history(self, _color, _piece, _captured_piece, _start_position_x, _start_position_y,
-                            _end_position_x, _end_position_y, _promotion, _castling):
+                            _end_position_x, _end_position_y, _promotion, _castling, _check):
         self._history.append(
             {"color": _color, "piece": _piece, "captured_piece": _captured_piece, "start_position_x": _start_position_x,
              "start_position_y": _start_position_y, "end_position_x": _end_position_x,
-             "end_position_y": _end_position_y, "promotion": _promotion, "castling": _castling})
+             "end_position_y": _end_position_y, "promotion": _promotion, "castling": _castling, "check": _check})
 
     def update_move(self, _updated_move, _index: int = -1):
         self._history[_index] = _updated_move
@@ -284,5 +285,7 @@ class Chess(pyglet.window.Window):
             if _move["promotion"] is not None:
                 _str += _move["promotion"].__class__.__name__[1].upper() if isinstance(_move["promotion"], Knight) else \
                     _move["promotion"].__class__.__name__[0]  # Promoted piece
+            if _move["check"]:
+                _str += "+"
 
         return _str
