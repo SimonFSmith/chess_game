@@ -54,7 +54,7 @@ class History:
 
         return _str
 
-    # Creates a dictionnary of squares name
+    # Creates a dictionary of squares name
     def create_notations(self, keys, values):
         for i in range(10):
             for j in range(8):
