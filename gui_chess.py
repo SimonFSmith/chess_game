@@ -21,20 +21,23 @@ class Chess(pyglet.window.Window):
     promotion = False
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
-    bar = shapes.Rectangle
+    menu_bar = shapes.Rectangle
     # Buttons
     undo_state = resources.undo_button_black
     add_state = resources.add_button_black
     rules_state = resources.rules_button_black
     stop_state = resources.stop_button_hover
-    undo_x = 610
+    about_state = resources.about_button_black
+    undo_x = 605
     undo_y = 90
-    add_x = 670
+    add_x = 690
     add_y = 90
-    rules_x = 730
+    rules_x = 775
     rules_y = 90
-    stop_x = 790
+    stop_x = 860
     stop_y = 90
+    about_x = 945
+    about_y = 90
 
     window_x = 1000
     window_y = 600
@@ -80,18 +83,19 @@ class Chess(pyglet.window.Window):
         self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225)
         self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225)
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
+        self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width), height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
-        self.bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width), height=150, color=(200, 200, 200))
 
     def on_draw(self):
         # Board initialization
         self.clear()
         self.chessboard.blit(0, 0)
-        self.bar.draw()
+        self.menu_bar.draw()
         self.undo_state.blit(self.undo_x, self.undo_y)
         self.add_state.blit(self.add_x, self.add_y)
         self.rules_state.blit(self.rules_x, self.rules_y)
         self.stop_state.blit(self.stop_x, self.stop_y)
+        self.about_state.blit(self.about_x, self.about_y)
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] is not None: self.board[i][j].draw()
@@ -292,6 +296,11 @@ class Chess(pyglet.window.Window):
                     if self.stop_x < x < (self.stop_x + self.stop_state.width):
                         self.change_color_press_stop()
 
+                # si le button about est appuyé
+                if self.about_y < y < (self.about_y + self.about_state.height):
+                    if self.about_x < x < (self.about_x + self.about_state.width):
+                        self.change_color_press_about()
+
     #fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
@@ -301,6 +310,8 @@ class Chess(pyglet.window.Window):
         self.rules_state = resources.rules_button_hover
     def update_stop_hover(self, dt):
         self.stop_state = resources.stop_button_hover
+    def update_about_hover(self, dt):
+        self.about_state = resources.about_button_hover
 
     #fonction pour changer la couleur du boutton lors d'un clique
     def change_color_press_undo(self):
@@ -318,6 +329,10 @@ class Chess(pyglet.window.Window):
     def change_color_press_stop(self):
         self.stop_state = resources.stop_button_press
         pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
+
+    def change_color_press_about(self):
+        self.about_state = resources.about_button_press
+        pyglet.clock.schedule_once(self.update_about_hover, 0.17)
 
     #fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
@@ -349,6 +364,13 @@ class Chess(pyglet.window.Window):
             self.stop_state = resources.stop_button_hover
         else:
             self.stop_state = resources.stop_button_black
+
+        # button about
+        if self.about_x + self.about_state.width > x > self.about_x \
+                and self.about_y + self.about_state.height > y > self.about_y:
+            self.about_state = resources.about_button_hover
+        else:
+            self.about_state = resources.about_button_black
 
     def update(self, dt):
         self.on_draw()

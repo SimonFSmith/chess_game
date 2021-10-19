@@ -27,7 +27,9 @@ rules_button_hover = pyglet.resource.image('resources/button_rules_hover.png')
 rules_button_press = pyglet.resource.image('resources/button_rules_press.png')
 
 stop_button_black = pyglet.resource.image('resources/stop_button_black.png')
-
 stop_button_hover = pyglet.resource.image('resources/stop_button_hover.png')
 stop_button_press = pyglet.resource.image('resources/stop_button_press.png')
 
+about_button_black = pyglet.resource.image('resources/about_button_black.png')
+about_button_hover = pyglet.resource.image('resources/about_button_hover.png')
+about_button_press = pyglet.resource.image('resources/about_button_press.png')
