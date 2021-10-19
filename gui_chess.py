@@ -1,5 +1,6 @@
 import pyglet
 from pyglet.window import mouse
+from pyglet import shapes
 
 import resources
 from history import History
@@ -20,26 +21,30 @@ class Chess(pyglet.window.Window):
     promotion = False
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
+    bar = shapes.Rectangle
     # Buttons
     undo_state = resources.undo_button_black
     add_state = resources.add_button_black
     rules_state = resources.rules_button_black
     stop_state = resources.stop_button_hover
     undo_x = 610
-    undo_y = 478
-    add_x = 720
-    add_y = 480
-    rules_x = 840
-    rules_y = 480
-    stop_x = 610
-    stop_y = 350
+    undo_y = 90
+    add_x = 670
+    add_y = 90
+    rules_x = 730
+    rules_y = 90
+    stop_x = 790
+    stop_y = 90
+
+    window_x = 1000
+    window_y = 600
 
     # History
     _history = History()
 
     def __init__(self):
         # Board is initialized with its screen size.
-        super(Chess, self).__init__(1000, 600,
+        super(Chess, self).__init__(self.window_x, self.window_y,
                                     resizable=False,
                                     caption='Chess',
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
@@ -75,11 +80,14 @@ class Chess(pyglet.window.Window):
         self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225)
         self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225)
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
+        self.set_icon(self.sprite_sheet[1])
+        self.bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width), height=150, color=(200, 200, 200))
 
     def on_draw(self):
         # Board initialization
         self.clear()
         self.chessboard.blit(0, 0)
+        self.bar.draw()
         self.undo_state.blit(self.undo_x, self.undo_y)
         self.add_state.blit(self.add_x, self.add_y)
         self.rules_state.blit(self.rules_x, self.rules_y)
@@ -175,7 +183,7 @@ class Chess(pyglet.window.Window):
                     if self.current_pos[0] < 0 and self.current_pos[
                         1] < 0:  # Goes inside because it's initialized with -1, -1
                         if self.board[board_y][board_x] is not None and self.move == self.board[board_y][
-                            board_x].white:  # If there's a click from your side
+                        board_x].white:  # If there's a click from your side
                             self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
                             if self.move:  # If white
                                 valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
@@ -335,7 +343,7 @@ class Chess(pyglet.window.Window):
         else:
             self.rules_state = resources.rules_button_black
 
-        # button rules
+        # button stop
         if self.stop_x + self.stop_state.width > x > self.stop_x \
                 and self.stop_y + self.stop_state.height > y > self.stop_y:
             self.stop_state = resources.stop_button_hover
