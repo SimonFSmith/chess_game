@@ -22,6 +22,7 @@ class WesnothButton(glooey.Button):
 class WesnothDialog(glooey.ButtonDialog):
     EVENT_BLACK_BUTTON_CLICKED = 'EVENT_BLACK_BUTTON_CLICKED'
     EVENT_WHITE_BUTTON_CLICKED = 'EVENT_WHITE_BUTTON_CLICKED'
+    EVENT_DIALOG_CLOSED = 'EVENT_DIALOG_CLOSED'
 
     def __init__(self, *args, **kwargs):
         super(WesnothDialog, self).__init__(*args, **kwargs)
@@ -34,7 +35,8 @@ class WesnothDialog(glooey.ButtonDialog):
         self.get_buttons().add(self._black_button)
         self.get_buttons().add(self._white_button)
         self.get_buttons().add(self._cancel_button)
-        self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED])
+        self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED,
+                                     self.EVENT_DIALOG_CLOSED])
 
     def on_black_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_BLACK_BUTTON_CLICKED)
@@ -45,6 +47,7 @@ class WesnothDialog(glooey.ButtonDialog):
         self.close()
 
     def on_cancel_button_click(self, widget):
+        self._publisher.dispatch(self.EVENT_DIALOG_CLOSED)
         self.close()
 
     def get_publisher(self):

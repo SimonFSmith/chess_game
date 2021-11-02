@@ -82,6 +82,7 @@ class Chess(pyglet.window.Window):
         self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225, group=self._foreground)
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225, group=self._foreground)
         self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME])
+        self._block_screen = False
 
     def on_draw(self):
         # Board initialization
@@ -110,88 +111,108 @@ class Chess(pyglet.window.Window):
                 self.white_knight.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
+        if not self._block_screen:
+
         # Declaring variables for the history
-        _start_position_x = -1
-        _start_position_y = -1
-        _moved_piece = None
-        _captured_piece = None
-        _end_position_x = 0
-        _end_position_y = 0
-        _promoted_pawn = None
-        _castling = False
-        _checkmate = False
-        try:
-            if self.promotion:  # If there is a promotion
-                if button == mouse.LEFT:
-                    if 225 < y < 300:
-                        # A piece is chosen in fonction of where the player clicks
-                        if 131.25 < x < 206.25:
-                            self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Queen(self.promo_pawn[1],
-                                                                                       self.promo_pawn[0],
-                                                                                       not self._move)
-                        elif 218.75 < x < 293.75:
-                            self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Rook(self.promo_pawn[1],
-                                                                                      self.promo_pawn[0],
-                                                                                      not self._move)
-                        elif 306.25 < x < 381.25:
-                            self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_Pawn[1],
-                                                                                        self.promo_pawn[0],
-                                                                                        not self._move)
-                        elif 393.75 < x < 468.75:
-                            self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
-                                                                                        self.promo_pawn[0],
-                                                                                        not self._move)
+            _start_position_x = -1
+            _start_position_y = -1
+            _moved_piece = None
+            _captured_piece = None
+            _end_position_x = 0
+            _end_position_y = 0
+            _promoted_pawn = None
+            _castling = False
+            _checkmate = False
+            try:
+                if self.promotion:  # If there is a promotion
+                    if button == mouse.LEFT:
+                        if 225 < y < 300:
+                            # A piece is chosen in fonction of where the player clicks
+                            if 131.25 < x < 206.25:
+                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Queen(self.promo_pawn[1],
+                                                                                           self.promo_pawn[0],
+                                                                                           not self._move)
+                            elif 218.75 < x < 293.75:
+                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Rook(self.promo_pawn[1],
+                                                                                          self.promo_pawn[0],
+                                                                                          not self._move)
+                            elif 306.25 < x < 381.25:
+                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_Pawn[1],
+                                                                                            self.promo_pawn[0],
+                                                                                            not self._move)
+                            elif 393.75 < x < 468.75:
+                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
+                                                                                            self.promo_pawn[0],
+                                                                                            not self._move)
 
-                        _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
-                    self.promo_pawn = (-1, -1)
-                    self.promotion = False  # Promotion is done so it gets back to False
-                    # Checkmate verification after a promotion
-                    if not self._move:  # If it's black's turn
-                        if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
-                                self.board):  # If black king can't move but his not in check, there's a stalemate
-                            print('Stalemate!')
-                        if self.black_king.in_check(self.board):  # If black king is in check
-                            self.black_king.danger.visible = True
-                            if self.black_king.no_valid_moves(
-                                    self.board):  # If black king is in check with no valid moves
-                                _checkmate = True
-                                print("1-0")
-                        if self.white_king.danger.visible:  # If white king danger image is visible
-                            if not self.white_king.in_check(self.board):  # If white king is not in check
-                                self.white_king.danger.visible = False  # Danger is not display anymore
-                    else:  # If it's white's turn
-                        if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
-                                self.board):  # If white king can't move but his not in check, there's a stalemate
-                            print('Stalemate!')
-                        if self.white_king.in_check(self.board):  # If white king is in check
-                            self.white_king.danger.visible = True
-                            if self.white_king.no_valid_moves(
-                                    self.board):  # If white king is in check with no valid moves
-                                _checkmate = True
-                                print("0-1")
-                        if self.black_king.danger.visible:  # If black king danger image is visible
-                            if not self.black_king.in_check(self.board):  # If black king is not in check
-                                self.black_king.danger.visible = False  # Danger is not display anymore
+                            _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
+                        self.promo_pawn = (-1, -1)
+                        self.promotion = False  # Promotion is done so it gets back to False
+                        # Checkmate verification after a promotion
+                        if not self._move:  # If it's black's turn
+                            if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
+                                    self.board):  # If black king can't move but his not in check, there's a stalemate
+                                print('Stalemate!')
+                            if self.black_king.in_check(self.board):  # If black king is in check
+                                self.black_king.danger.visible = True
+                                if self.black_king.no_valid_moves(
+                                        self.board):  # If black king is in check with no valid moves
+                                    _checkmate = True
+                                    print("1-0")
+                            if self.white_king.danger.visible:  # If white king danger image is visible
+                                if not self.white_king.in_check(self.board):  # If white king is not in check
+                                    self.white_king.danger.visible = False  # Danger is not display anymore
+                        else:  # If it's white's turn
+                            if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
+                                    self.board):  # If white king can't move but his not in check, there's a stalemate
+                                print('Stalemate!')
+                            if self.white_king.in_check(self.board):  # If white king is in check
+                                self.white_king.danger.visible = True
+                                if self.white_king.no_valid_moves(
+                                        self.board):  # If white king is in check with no valid moves
+                                    _checkmate = True
+                                    print("0-1")
+                            if self.black_king.danger.visible:  # If black king danger image is visible
+                                if not self.black_king.in_check(self.board):  # If black king is not in check
+                                    self.black_king.danger.visible = False  # Danger is not display anymore
 
-                _last_move = self._history.get_move()
-                _last_move["promotion"] = _promoted_pawn
-                self._history.update_move(_last_move)
-                self._publisher.dispatch(self.EVENT_PIECE_MOVED)
+                    _last_move = self._history.get_move()
+                    _last_move["promotion"] = _promoted_pawn
+                    self._history.update_move(_last_move)
+                    self._publisher.dispatch(self.EVENT_PIECE_MOVED)
 
-            else:  # If there is not promotion
-                if button == mouse.LEFT:
-                    board_x = x // 75
-                    board_y = y // 75
+                else:  # If there is not promotion
+                    if button == mouse.LEFT:
+                        board_x = x // 75
+                        board_y = y // 75
 
-                    if self.current_pos[0] < 0 and self.current_pos[
-                        1] < 0:  # Goes inside because it's initialized with -1, -1
-                        if self.board[board_y][board_x] is not None and self._move == self.board[board_y][
-                            board_x].white:  # If there's a click from your side
-                            self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
-                            if self._move:  # If white
+                        if self.current_pos[0] < 0 and self.current_pos[
+                            1] < 0:  # Goes inside because it's initialized with -1, -1
+                            if self.board[board_y][board_x] is not None and self._move == self.board[board_y][
+                                board_x].white:  # If there's a click from your side
+                                self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
+                                if self._move:  # If white
+                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                               self.white_king)  # Put the white's valid move inside the variable
+                                else:  # If black
+                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                               self.black_king)  # Put the blacks's valid move inside the variable
+                                if len(valid_moves) == 0:  # If there's no valid move
+                                    self.current_pos = (-1, -1)  # Nothing to show, position is reset
+                                else:  # If there are possible moves
+                                    for move in valid_moves:  # For each move inside the variable
+                                        self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
+                        elif self.board[board_y][board_x] is not None and self._move == self.board[board_y][
+                            board_x].white:  # If you have a piece selected and you wanna select another one
+                            # Remove past move posibilities
+                            for row in self.valid_sprites:
+                                for sprite in row:
+                                    sprite.visible = False
+                            self.current_pos = (board_y, board_x)
+                            if self._move:  # If it's white
                                 valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
                                                                                            self.white_king)  # Put the white's valid move inside the variable
-                            else:  # If black
+                            else:  # If it's black
                                 valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
                                                                                            self.black_king)  # Put the blacks's valid move inside the variable
                             if len(valid_moves) == 0:  # If there's no valid move
@@ -199,102 +220,85 @@ class Chess(pyglet.window.Window):
                             else:  # If there are possible moves
                                 for move in valid_moves:  # For each move inside the variable
                                     self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
-                    elif self.board[board_y][board_x] is not None and self._move == self.board[board_y][
-                        board_x].white:  # If you have a piece selected and you wanna select another one
-                        # Remove past move posibilities
-                        for row in self.valid_sprites:
-                            for sprite in row:
-                                sprite.visible = False
-                        self.current_pos = (board_y, board_x)
-                        if self._move:  # If it's white
-                            valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                       self.white_king)  # Put the white's valid move inside the variable
-                        else:  # If it's black
-                            valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                       self.black_king)  # Put the blacks's valid move inside the variable
-                        if len(valid_moves) == 0:  # If there's no valid move
-                            self.current_pos = (-1, -1)  # Nothing to show, position is reset
-                        else:  # If there are possible moves
-                            for move in valid_moves:  # For each move inside the variable
-                                self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
-                    else:  # Making the move
-                        if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
-                            # Saves the captured piece if there is
-                            if self.board[board_y][board_x] is not None:
-                                _captured_piece = self.board[board_y][board_x]
+                        else:  # Making the move
+                            if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
+                                # Saves the captured piece if there is
+                                if self.board[board_y][board_x] is not None:
+                                    _captured_piece = self.board[board_y][board_x]
 
-                            _start_position_x = self.current_pos[1]
-                            _start_position_y = self.current_pos[0]
-                            self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
-                            _castling = self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x,
-                                                                                                             board_y,
-                                                                                                             self.board)  # Board takes the current position
-                            _moved_piece = self.board[board_y][board_x]
+                                _start_position_x = self.current_pos[1]
+                                _start_position_y = self.current_pos[0]
+                                self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
+                                _castling = self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x,
+                                                                                                                 board_y,
+                                                                                                                 self.board)  # Board takes the current position
+                                _moved_piece = self.board[board_y][board_x]
 
-                            if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
-                                    board_y == 0 or board_y == 7):  # Check if there's a pawn at top or bottom
-                                self.promotion = True  # Makes the promotion
-                                self.promo_pawn = (board_y, board_x)
-                            self.board[self.current_pos[0]][self.current_pos[1]] = None
-                            self.current_pos = (-1, -1)  # Goes back to -1, -1 to go back to the if statement
-                            # Checkmate verification
-                            if self._move:
-                                if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
-                                        self.board):
-                                    print('Stalemate!')
-                                if self.black_king.in_check(self.board):
-                                    self.black_king.danger.visible = True
-                                    if self.black_king.no_valid_moves(self.board):
-                                        _checkmate = True
-                                        print("1-0")
-                                if self.white_king.danger.visible:
-                                    if not self.white_king.in_check(self.board):
-                                        self.white_king.danger.visible = False
-                            else:
-                                if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
-                                        self.board):
-                                    print('Stalemate!')
-                                if self.white_king.in_check(self.board):
-                                    self.white_king.danger.visible = True
-                                    if self.white_king.no_valid_moves(self.board):
-                                        _checkmate = True
-                                        print("0-1")
-                                if self.black_king.danger.visible:
-                                    if not self.black_king.in_check(self.board):
-                                        self.black_king.danger.visible = False
-                            self._move = not self._move  # Change turn from black to white and white to black
-                            for row in self.valid_sprites:
-                                for sprite in row:
-                                    sprite.visible = False  # Removes the move possibilities
+                                if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
+                                        board_y == 0 or board_y == 7):  # Check if there's a pawn at top or bottom
+                                    self.promotion = True  # Makes the promotion
+                                    self.promo_pawn = (board_y, board_x)
+                                self.board[self.current_pos[0]][self.current_pos[1]] = None
+                                self.current_pos = (-1, -1)  # Goes back to -1, -1 to go back to the if statement
+                                # Checkmate verification
+                                if self._move:
+                                    if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
+                                            self.board):
+                                        print('Stalemate!')
+                                    if self.black_king.in_check(self.board):
+                                        self.black_king.danger.visible = True
+                                        if self.black_king.no_valid_moves(self.board):
+                                            _checkmate = True
+                                            print("1-0")
+                                    if self.white_king.danger.visible:
+                                        if not self.white_king.in_check(self.board):
+                                            self.white_king.danger.visible = False
+                                else:
+                                    if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
+                                            self.board):
+                                        print('Stalemate!')
+                                    if self.white_king.in_check(self.board):
+                                        self.white_king.danger.visible = True
+                                        if self.white_king.no_valid_moves(self.board):
+                                            _checkmate = True
+                                            print("0-1")
+                                    if self.black_king.danger.visible:
+                                        if not self.black_king.in_check(self.board):
+                                            self.black_king.danger.visible = False
+                                self._move = not self._move  # Change turn from black to white and white to black
+                                for row in self.valid_sprites:
+                                    for sprite in row:
+                                        sprite.visible = False  # Removes the move possibilities
 
-                            # Adds previous move to history
-                            self._history.add_move_to_history(not self._move, _moved_piece, _captured_piece,
-                                                              _start_position_x, _start_position_y, board_x, board_y,
-                                                              _promoted_pawn, _castling,
-                                                              self.white_king.danger.visible if self._move else self.black_king.danger.visible,
-                                                              _checkmate)
-                            if not self.promotion:
-                                self._publisher.dispatch(self.EVENT_PIECE_MOVED)
-        except IndexError:
-            if button == mouse.LEFT:
-                # si le button undo est appuyé
-                if self.undo_y < y < (self.undo_y + self.undo_state.height):
-                    if self.undo_x < x < (self.undo_x + self.undo_state.width):
-                        self.change_color_press_undo()
-                        self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
+                                # Adds previous move to history
+                                self._history.add_move_to_history(not self._move, _moved_piece, _captured_piece,
+                                                                  _start_position_x, _start_position_y, board_x, board_y,
+                                                                  _promoted_pawn, _castling,
+                                                                  self.white_king.danger.visible if self._move else self.black_king.danger.visible,
+                                                                  _checkmate)
+                                if not self.promotion:
+                                    self._publisher.dispatch(self.EVENT_PIECE_MOVED)
+            except IndexError:
+                if button == mouse.LEFT:
+                    # si le button undo est appuyé
+                    if self.undo_y < y < (self.undo_y + self.undo_state.height):
+                        if self.undo_x < x < (self.undo_x + self.undo_state.width):
+                            self.change_color_press_undo()
+                            self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
 
-                # si le button add est appuyé
-                if self.add_y < y < (self.add_y + self.add_state.height):
-                    if self.add_x < x < (self.add_x + self.add_state.width):
-                        self.change_color_press_add()
-                        self._publisher.dispatch(self.EVENT_NEW_GAME)
+                    # si le button add est appuyé
+                    if self.add_y < y < (self.add_y + self.add_state.height):
+                        if self.add_x < x < (self.add_x + self.add_state.width):
+                            self.change_color_press_add()
+                            self._publisher.dispatch(self.EVENT_NEW_GAME)
 
 
-                # si le button rules est appuyé
-                if self.rules_y < y < (self.rules_y + self.rules_state.height):
-                    if self.rules_x < x < (self.rules_x + self.rules_state.width):
-                        self.change_color_press_rules()
-
+                    # si le button rules est appuyé
+                    if self.rules_y < y < (self.rules_y + self.rules_state.height):
+                        if self.rules_x < x < (self.rules_x + self.rules_state.width):
+                            self.change_color_press_rules()
+        else:
+            pass
 
     def get_hud_group(self):
         return self._hud
@@ -310,6 +314,9 @@ class Chess(pyglet.window.Window):
 
     def set_move(self, turn):
         self._move = turn
+
+    def set_block_screen(self, block_screen):
+        self._block_screen = block_screen
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
