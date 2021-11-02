@@ -60,7 +60,7 @@ class Chess(pyglet.window.Window):
                                     vsync=False)  # FPS
         self._batch = pyglet.graphics.Batch()
         self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
-        self.black_king = King(4, 7, False)  # Type is False is piece is black
+        self.black_king = King(4, 7, False)  # If type is False, piece is black
         # Pieces are placed on the board, starting from white, then 4 empty lines and black
         self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
                        Knight(6, 0), Rook(7, 0)],
@@ -302,11 +302,12 @@ class Chess(pyglet.window.Window):
                                               history_data['start_position_x'],
                                               history_data['start_position_y'],
                                               self.board)
-                        #TODO: Remettre le tour à la couleur qui a annulé un déplacement.
-                        Piece.make_move(history_data['piece'],
-                                        self.board,
-                                        self.move,
-                                        King.in_check(history_data['piece'], self.board))
+                        if self.move:
+                            self.move = False
+                        elif not self.move:
+                            self.move = True
+
+
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
