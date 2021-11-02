@@ -10,6 +10,7 @@ from pieces.knight import Knight
 from pieces.pawn import Pawn
 from pieces.queen import Queen
 from pieces.rook import Rook
+from pieces.piece import Piece
 
 
 class Chess(pyglet.window.Window):
@@ -280,6 +281,17 @@ class Chess(pyglet.window.Window):
                 if self.undo_y < y < (self.undo_y + self.undo_state.height):
                     if self.undo_x < x < (self.undo_x + self.undo_state.width):
                         self.change_color_press_undo()
+                        history_data = History.get_move(self._history)
+                        #msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
+                        Piece.change_location(history_data['piece'],
+                                              history_data['start_position_x'],
+                                              history_data['start_position_y'],
+                                              self.board)
+                        #TODO: Remettre le tour à la couleur qui a annulé un déplacement.
+                        Piece.make_move(history_data['piece'],
+                                        self.board,
+                                        self.move,
+                                        King.in_check(history_data['piece'], self.board))
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
