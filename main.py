@@ -18,6 +18,14 @@ def _add_last_move_to_scrollbox():
 def _show_new_game_dialog():
     _dialog = WesnothDialog()
     _gui.add(_dialog)
+    _dialog.get_publisher().register(_dialog.EVENT_BLACK_BUTTON_CLICKED, "main", _set_player_turn_black)
+    _dialog.get_publisher().register(_dialog.EVENT_WHITE_BUTTON_CLICKED, "main", _set_player_turn_white)
+
+def _set_player_turn_black():
+    _my_game.set_move(False)
+
+def _set_player_turn_white():
+    _my_game.set_move(True)
 
 
 

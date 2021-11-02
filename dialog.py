@@ -1,6 +1,8 @@
 import glooey
 import pyglet
 
+from lib.publisher import Publisher
+
 
 class WesnothLabel(glooey.Label):
     custom_font_name = 'Lato Regular'
@@ -17,7 +19,39 @@ class WesnothButton(glooey.Button):
     custom_down_image = pyglet.resource.image('resources/dialog/down.png')
 
 
-class WesnothDialog(glooey.YesNoDialog):
+class WesnothDialog(glooey.ButtonDialog):
+    EVENT_BLACK_BUTTON_CLICKED = 'EVENT_BLACK_BUTTON_CLICKED'
+    EVENT_WHITE_BUTTON_CLICKED = 'EVENT_WHITE_BUTTON_CLICKED'
+
+    def __init__(self, *args, **kwargs):
+        super(WesnothDialog, self).__init__(*args, **kwargs)
+        self._black_button = self.BlackButton()
+        self._black_button.push_handlers(on_click=self.on_black_button_click)
+        self._white_button = self.WhiteButton()
+        self._white_button.push_handlers(on_click=self.on_white_button_click)
+        self._cancel_button = self.CancelButton()
+        self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
+        self.get_buttons().add(self._black_button)
+        self.get_buttons().add(self._white_button)
+        self.get_buttons().add(self._cancel_button)
+        self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED])
+
+
+    def on_black_button_click(self, widget):
+        self._publisher.dispatch(self.EVENT_BLACK_BUTTON_CLICKED)
+        self.close()
+
+    def on_white_button_click(self, widget):
+        self._publisher.dispatch(self.EVENT_WHITE_BUTTON_CLICKED)
+        self.close()
+
+    def on_cancel_button_click(self, widget):
+        self.close()
+
+    def get_publisher(self):
+        return self._publisher
+
+
     class Decoration(glooey.Background):
         custom_center = pyglet.resource.texture('resources/dialog/center.png')
         custom_top = pyglet.resource.texture('resources/dialog/top.png')
@@ -40,8 +74,11 @@ class WesnothDialog(glooey.YesNoDialog):
         custom_cell_padding = 3
         custom_alignment = 'right'
 
-    class YesButton(WesnothButton):
-        custom_text = 'Ok'
+    class BlackButton(WesnothButton):
+        custom_text = 'Black'
 
-    class NoButton(WesnothButton):
+    class WhiteButton(WesnothButton):
+        custom_text = 'White'
+
+    class CancelButton(WesnothButton):
         custom_text = 'Cancel'
