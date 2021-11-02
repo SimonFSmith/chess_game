@@ -5,10 +5,10 @@ from lib.publisher import Publisher
 
 
 class WesnothLabel(glooey.Label):
-    custom_font_name = 'Lato Regular'
     custom_font_size = 10
-    custom_color = '#b9ad86'
+    custom_color = '#000000'
     custom_alignment = 'center'
+    custom_bold = True
 
 
 class WesnothButton(glooey.Button):
@@ -36,7 +36,6 @@ class WesnothDialog(glooey.ButtonDialog):
         self.get_buttons().add(self._cancel_button)
         self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED])
 
-
     def on_black_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_BLACK_BUTTON_CLICKED)
         self.close()
@@ -50,7 +49,6 @@ class WesnothDialog(glooey.ButtonDialog):
 
     def get_publisher(self):
         return self._publisher
-
 
     class Decoration(glooey.Background):
         custom_center = pyglet.resource.texture('resources/dialog/center.png')
