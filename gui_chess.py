@@ -16,8 +16,9 @@ class Chess(pyglet.window.Window):
     # Events
     EVENT_PIECE_MOVED = "EVENT_PIECE_MOVED"
     EVENT_MOVE_UNDONE = "EVENT_MOVE_UNDONE"
+    EVENT_NEW_GAME = 'EVENT_NEW_GAME'
 
-    chessboard = resources.chessboard
+
     valid_img = resources.valid_img
     promo_img = resources.promo_img
     current_pos = (-1, -1)
@@ -46,6 +47,9 @@ class Chess(pyglet.window.Window):
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
                                     vsync=False)  # FPS
         self._batch = pyglet.graphics.Batch()
+        self._foreground = pyglet.graphics.OrderedGroup(0)
+        self._hud = pyglet.graphics.OrderedGroup(1)
+        self.chessboard = pyglet.sprite.Sprite(img=resources.chessboard, x=0, y=0, batch=self._batch ,group=self._foreground)
         self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
         self.black_king = King(4, 7, False)  # Type is False is piece is black
         # Pieces are placed on the board, starting from white, then 4 empty lines and black
@@ -64,26 +68,26 @@ class Chess(pyglet.window.Window):
         for i in range(8):
             row_sprites = []
             for j in range(8):
-                sprite = pyglet.sprite.Sprite(self.valid_img, 75 * j, 75 * i)
+                sprite = pyglet.sprite.Sprite(self.valid_img, 75 * j, 75 * i, group=self._foreground)
                 sprite.visible = False
                 row_sprites.append(sprite)
             self.valid_sprites.append(row_sprites)
         # Used during promotion of the pawn to display promotion choices
-        self.white_queen = pyglet.sprite.Sprite(self.sprite_sheet[7], 131.25, 225)
-        self.white_rook = pyglet.sprite.Sprite(self.sprite_sheet[10], 218.75, 225)
-        self.white_bishop = pyglet.sprite.Sprite(self.sprite_sheet[8], 306.25, 225)
-        self.white_knight = pyglet.sprite.Sprite(self.sprite_sheet[9], 393.75, 225)
-        self.black_queen = pyglet.sprite.Sprite(self.sprite_sheet[1], 131.25, 225)
-        self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225)
-        self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225)
-        self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
-        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE])
+        self.white_queen = pyglet.sprite.Sprite(self.sprite_sheet[7], 131.25, 225, group=self._foreground)
+        self.white_rook = pyglet.sprite.Sprite(self.sprite_sheet[10], 218.75, 225, group=self._foreground)
+        self.white_bishop = pyglet.sprite.Sprite(self.sprite_sheet[8], 306.25, 225, group=self._foreground)
+        self.white_knight = pyglet.sprite.Sprite(self.sprite_sheet[9], 393.75, 225, group=self._foreground)
+        self.black_queen = pyglet.sprite.Sprite(self.sprite_sheet[1], 131.25, 225, group=self._foreground)
+        self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225, group=self._foreground)
+        self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225, group=self._foreground)
+        self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225, group=self._foreground)
+        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME])
 
     def on_draw(self):
         # Board initialization
         self.clear()
         self._batch.draw()
-        self.chessboard.blit(0, 0)
+        # self.chessboard.blit(0, 0)
         self.undo_state.blit(self.undo_x, self.undo_y)
         self.add_state.blit(self.add_x, self.add_y)
         self.rules_state.blit(self.rules_x, self.rules_y)
@@ -283,11 +287,17 @@ class Chess(pyglet.window.Window):
                 if self.add_y < y < (self.add_y + self.add_state.height):
                     if self.add_x < x < (self.add_x + self.add_state.width):
                         self.change_color_press_add()
+                        self._publisher.dispatch(self.EVENT_NEW_GAME)
 
-                # si le button add est appuyé
+
+                # si le button rules est appuyé
                 if self.rules_y < y < (self.rules_y + self.rules_state.height):
                     if self.rules_x < x < (self.rules_x + self.rules_state.width):
                         self.change_color_press_rules()
+
+
+    def get_hud_group(self):
+        return self._hud
 
     def get_history(self):
         return self._history
