@@ -19,7 +19,10 @@ class History:
 
     # Gets move from history
     def get_move(self, _index: int = -1):
-        return self._history[_index]
+        try:
+            return self._history[_index]
+        except IndexError:
+            return ""
 
     # Updates move
     def update_move(self, _updated_move, _index: int = -1):

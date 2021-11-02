@@ -4,6 +4,7 @@ from pyglet import shapes
 
 import resources
 from history import History
+from lib.publisher import Publisher
 from pieces.bishop import Bishop
 from pieces.king import King
 from pieces.knight import Knight
@@ -14,6 +15,10 @@ from pieces.piece import Piece
 
 
 class Chess(pyglet.window.Window):
+    # Events
+    EVENT_PIECE_MOVED = "EVENT_PIECE_MOVED"
+    EVENT_MOVE_UNDONE = "EVENT_MOVE_UNDONE"
+
     chessboard = resources.chessboard
     valid_img = resources.valid_img
     promo_img = resources.promo_img
@@ -53,6 +58,7 @@ class Chess(pyglet.window.Window):
                                     caption='Chess',
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
                                     vsync=False)  # FPS
+        self._batch = pyglet.graphics.Batch()
         self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
         self.black_king = King(4, 7, False)  # Type is False is piece is black
         # Pieces are placed on the board, starting from white, then 4 empty lines and black
@@ -86,10 +92,12 @@ class Chess(pyglet.window.Window):
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width), height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
+        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE])
 
     def on_draw(self):
         # Board initialization
         self.clear()
+        self._batch.draw()
         self.chessboard.blit(0, 0)
         self.menu_bar.draw()
         self.undo_state.blit(self.undo_x, self.undo_y)
@@ -141,10 +149,12 @@ class Chess(pyglet.window.Window):
                                                                                       not self.move)
                         elif 306.25 < x < 381.25:
                             self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_Pawn[1],
-                                                                                        self.promo_pawn[0], not self.move)
+                                                                                        self.promo_pawn[0],
+                                                                                        not self.move)
                         elif 393.75 < x < 468.75:
                             self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
-                                                                                        self.promo_pawn[0], not self.move)
+                                                                                        self.promo_pawn[0],
+                                                                                        not self.move)
 
                         _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
                     self.promo_pawn = (-1, -1)
@@ -156,7 +166,8 @@ class Chess(pyglet.window.Window):
                             print('Stalemate!')
                         if self.black_king.in_check(self.board):  # If black king is in check
                             self.black_king.danger.visible = True
-                            if self.black_king.no_valid_moves(self.board):  # If black king is in check with no valid moves
+                            if self.black_king.no_valid_moves(
+                                    self.board):  # If black king is in check with no valid moves
                                 _checkmate = True
                                 print("1-0")
                         if self.white_king.danger.visible:  # If white king danger image is visible
@@ -168,7 +179,8 @@ class Chess(pyglet.window.Window):
                             print('Stalemate!')
                         if self.white_king.in_check(self.board):  # If white king is in check
                             self.white_king.danger.visible = True
-                            if self.white_king.no_valid_moves(self.board):  # If white king is in check with no valid moves
+                            if self.white_king.no_valid_moves(
+                                    self.board):  # If white king is in check with no valid moves
                                 _checkmate = True
                                 print("0-1")
                         if self.black_king.danger.visible:  # If black king danger image is visible
@@ -178,7 +190,7 @@ class Chess(pyglet.window.Window):
                 _last_move = self._history.get_move()
                 _last_move["promotion"] = _promoted_pawn
                 self._history.update_move(_last_move)
-                print(self._history.format_move())
+                self._publisher.dispatch(self.EVENT_PIECE_MOVED)
 
             else:  # If there is not promotion
                 if button == mouse.LEFT:
@@ -241,7 +253,8 @@ class Chess(pyglet.window.Window):
                             self.current_pos = (-1, -1)  # Goes back to -1, -1 to go back to the if statement
                             # Checkmate verification
                             if self.move:
-                                if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(self.board):
+                                if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
+                                        self.board):
                                     print('Stalemate!')
                                 if self.black_king.in_check(self.board):
                                     self.black_king.danger.visible = True
@@ -252,7 +265,8 @@ class Chess(pyglet.window.Window):
                                     if not self.white_king.in_check(self.board):
                                         self.white_king.danger.visible = False
                             else:
-                                if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(self.board):
+                                if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
+                                        self.board):
                                     print('Stalemate!')
                                 if self.white_king.in_check(self.board):
                                     self.white_king.danger.visible = True
@@ -274,13 +288,14 @@ class Chess(pyglet.window.Window):
                                                               self.white_king.danger.visible if self.move else self.black_king.danger.visible,
                                                               _checkmate)
                             if not self.promotion:
-                                print(self._history.format_move())
+                                self._publisher.dispatch(self.EVENT_PIECE_MOVED)
         except IndexError:
             if button == mouse.LEFT:
-                #si le button undo est appuyé
+                # si le button undo est appuyé
                 if self.undo_y < y < (self.undo_y + self.undo_state.height):
                     if self.undo_x < x < (self.undo_x + self.undo_state.width):
                         self.change_color_press_undo()
+                        self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
                         history_data = History.get_move(self._history)
                         #msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
                         Piece.change_location(history_data['piece'],
@@ -314,10 +329,22 @@ class Chess(pyglet.window.Window):
                         self.change_color_press_about()
 
     #fonction pour changer l'image du button. nécessaire pour le schedule_once
+    def get_history(self):
+        return self._history
+
+    def get_batch(self):
+        return self._batch
+
+    def get_publisher(self):
+        return self._publisher
+
+    # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
+
     def update_add_hover(self, dt):
         self.add_state = resources.add_button_hover
+
     def update_rules_hover(self, dt):
         self.rules_state = resources.rules_button_hover
     def update_stop_hover(self, dt):
@@ -325,7 +352,7 @@ class Chess(pyglet.window.Window):
     def update_about_hover(self, dt):
         self.about_state = resources.about_button_hover
 
-    #fonction pour changer la couleur du boutton lors d'un clique
+    # fonction pour changer la couleur du boutton lors d'un clique
     def change_color_press_undo(self):
         self.undo_state = resources.undo_button_press
         pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
@@ -338,6 +365,7 @@ class Chess(pyglet.window.Window):
         self.rules_state = resources.rules_button_press
         pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
 
+    # fonction pour détecter si la souris est au dessus d'un boutton
     def change_color_press_stop(self):
         self.stop_state = resources.stop_button_press
         pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
@@ -349,14 +377,14 @@ class Chess(pyglet.window.Window):
     #fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
         # print(x, y, dx, dy)
-        #button undo
+        # button undo
         if self.undo_x + self.undo_state.width > x > self.undo_x \
                 and self.undo_y + self.undo_state.height > y > self.undo_y:
             self.undo_state = resources.undo_button_hover
         else:
             self.undo_state = resources.undo_button_black
 
-        #button add
+        # button add
         if self.add_x + self.add_state.width > x > self.add_x \
                 and self.add_y + self.add_state.height > y > self.add_y:
             self.add_state = resources.add_button_hover
