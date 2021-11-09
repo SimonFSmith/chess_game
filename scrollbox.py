@@ -10,7 +10,7 @@ class WesnothScrollBox(glooey.ScrollBox):
     def __init__(self):
         super(WesnothScrollBox, self).__init__()
 
-        self._text = " "
+        self._text = "​"
         self._label = glooey.Label(self._text)
         self._label.set_color("#000000")
         self._label.set_bold(True)
@@ -22,9 +22,10 @@ class WesnothScrollBox(glooey.ScrollBox):
 
     def delete_label_last_line(self):
         _split_text = self._text.rsplit("\n", 2)
+        print(_split_text)
 
-        if _split_text[0] == " " or _split_text[1] == "":
-            self._text = " "
+        if _split_text[0] == "​" or _split_text[1] == "":
+            self._text = "​"
         else:
             self._text = _split_text[0] + "\n"
 
