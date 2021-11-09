@@ -133,7 +133,7 @@ class Chess(pyglet.window.Window):
         _end_position_x = 0
         _end_position_y = 0
         _promoted_pawn = None
-        _castling = False
+        _castling = None
         _checkmate = False
         try:
             if self.promotion:  # If there is a promotion
@@ -290,7 +290,6 @@ class Chess(pyglet.window.Window):
                                                               _checkmate)
                             if not self.promotion:
                                 self._publisher.dispatch(self.EVENT_PIECE_MOVED)
-            print(self.board)
         except IndexError:
             if button == mouse.LEFT:
                 # si le button undo est appuyé
@@ -304,19 +303,18 @@ class Chess(pyglet.window.Window):
                                               history_data['start_position_x'],
                                               history_data['start_position_y'],
                                               self.board)
-                        Piece.change_board_location(history_data['piece'],
-                                                    history_data['start_position_x'],
-                                                    history_data['start_position_y'],
-                                                    history_data['end_position_x'],
-                                                    history_data['end_position_y'],
-                                                    history_data['captured_piece'],
-                                                    self.board)
+                        self.change_board_location(history_data['piece'],
+                                                   history_data['start_position_x'],
+                                                   history_data['start_position_y'],
+                                                   history_data['end_position_x'],
+                                                   history_data['end_position_y'],
+                                                   history_data['captured_piece'],
+                                                   history_data['castling'],
+                                                   self.board)
                         if self.move:
                             self.move = False
                         elif not self.move:
                             self.move = True
-
-                        print(self.board)
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
@@ -385,6 +383,22 @@ class Chess(pyglet.window.Window):
     def change_color_press_about(self):
         self.about_state = resources.about_button_press
         pyglet.clock.schedule_once(self.update_about_hover, 0.17)
+
+    def change_board_location(self, piece, start_x, start_y, end_x, end_y, captured_piece, castling, board):
+        if castling:
+            if castling == [castling[0], 7]:  # kingside
+                _rook = self.board[castling[0]][5]
+                self.board[castling[0]][5] = None
+                self.board[castling[0]][castling[1]] = _rook
+                _rook.change_location(castling[1], castling[0], board)
+            else:  # queenside
+                _rook = self.board[castling[0]][3]
+                self.board[castling[0]][3] = None
+                self.board[castling[0]][castling[1]] = _rook
+                _rook.change_location(castling[1], castling[0], board)
+
+        board[end_y][end_x] = captured_piece
+        board[start_y][start_x] = piece
 
     # fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):

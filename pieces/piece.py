@@ -45,10 +45,6 @@ class Piece(object):
         self.piece_sprite.x = start_x * 75
         self.piece_sprite.y = start_y * 75
 
-    def change_board_location(self, start_x, start_y, end_x, end_y, captured_piece, board):
-        board[end_y][end_x] = captured_piece
-        board[start_y][start_x] = self
-
     # Draw piece on initialization
     def draw(self):
         self.piece_sprite.draw()
