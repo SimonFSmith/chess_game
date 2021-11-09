@@ -295,7 +295,8 @@ class Chess(pyglet.window.Window):
                 # si le button undo est appuyé
                 if self.undo_y < y < (self.undo_y + self.undo_state.height):
                     if self.undo_x < x < (self.undo_x + self.undo_state.width):
-                        self.change_color_press_undo()
+                        self.undo_state = resources.undo_button_press
+                        pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
                         self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
                         history_data = History.get_move(self._history)
                         # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
@@ -319,22 +320,26 @@ class Chess(pyglet.window.Window):
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
                     if self.add_x < x < (self.add_x + self.add_state.width):
-                        self.change_color_press_add()
+                        self.add_state = resources.add_button_press
+                        pyglet.clock.schedule_once(self.update_add_hover, 0.17)
 
-                # si le button add est appuyé
+                # si le button rules est appuyé
                 if self.rules_y < y < (self.rules_y + self.rules_state.height):
                     if self.rules_x < x < (self.rules_x + self.rules_state.width):
-                        self.change_color_press_rules()
+                        self.rules_state = resources.rules_button_press
+                        pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
 
                 # si le button stop est appuyé
                 if self.stop_y < y < (self.stop_y + self.stop_state.height):
                     if self.stop_x < x < (self.stop_x + self.stop_state.width):
-                        self.change_color_press_stop()
+                        self.stop_state = resources.stop_button_press
+                        pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
 
                 # si le button about est appuyé
                 if self.about_y < y < (self.about_y + self.about_state.height):
                     if self.about_x < x < (self.about_x + self.about_state.width):
-                        self.change_color_press_about()
+                        self.about_state = resources.about_button_press
+                        pyglet.clock.schedule_once(self.update_about_hover, 0.17)
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def get_history(self):
