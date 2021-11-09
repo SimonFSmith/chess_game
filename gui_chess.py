@@ -403,11 +403,17 @@ class Chess(pyglet.window.Window):
                 self.board[castling[0]][5] = None
                 self.board[castling[0]][castling[1]] = _rook
                 _rook.change_location(castling[1], castling[0], board)
+                _rook.moved = False
             else:  # queenside
                 _rook = self.board[castling[0]][3]
                 self.board[castling[0]][3] = None
                 self.board[castling[0]][castling[1]] = _rook
                 _rook.change_location(castling[1], castling[0], board)
+                _rook.moved = False
+            if color:
+                self.white_king.moved = False
+            else:
+                self.black_king.moved = False
 
         if check:
             if color:  # white
