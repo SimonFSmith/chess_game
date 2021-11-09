@@ -14,9 +14,9 @@ class Rook(Piece):
         self.piece_sprite = pyglet.sprite.Sprite(self.piece_image, x * 75, y * 75)
         self.moved = False
 
-    def change_location(self, x, y, board):
-        self.piece_sprite.x = x * 75
-        self.piece_sprite.y = y * 75
+    def change_location(self, start_x, start_y, board):
+        self.piece_sprite.x = start_x * 75
+        self.piece_sprite.y = start_y * 75
         self.moved = True
 
     def get_threat_squares(self, board):

@@ -18,26 +18,26 @@ class King(Piece):
         self.moved = False
 
     # Castling
-    def change_location(self, x, y, board):
+    def change_location(self, start_x, start_y, board):
         _castling = None
-        if x == self.piece_sprite.x // 75 + 2:  # castling kingside
-            board[y][7].change_location(5, y, board)
-            board[y][5] = board[y][7]
-            board[y][7] = None
-            board[y][6] = self
-            board[y][4] = None
+        if start_x == self.piece_sprite.x // 75 + 2:  # castling kingside
+            board[start_y][7].change_location(5, start_y, board)
+            board[start_y][5] = board[start_y][7]
+            board[start_y][7] = None
+            board[start_y][6] = self
+            board[start_y][4] = None
             _castling = "kingside"
-        elif x == self.piece_sprite.x // 75 - 2:  # castling queenside
-            board[y][0].change_location(3, y, board)
-            board[y][3] = board[y][0]
-            board[y][0] = None
-            board[y][2] = self
-            board[y][4] = None
+        elif start_x == self.piece_sprite.x // 75 - 2:  # castling queenside
+            board[start_y][0].change_location(3, start_y, board)
+            board[start_y][3] = board[start_y][0]
+            board[start_y][0] = None
+            board[start_y][2] = self
+            board[start_y][4] = None
             _castling = "queenside"
-        self.piece_sprite.x = x * 75
-        self.piece_sprite.y = y * 75
-        self.danger.x = x * 75
-        self.danger.y = y * 75
+        self.piece_sprite.x = start_x * 75
+        self.piece_sprite.y = start_y * 75
+        self.danger.x = start_x * 75
+        self.danger.y = start_y * 75
         self.moved = True
 
         return _castling

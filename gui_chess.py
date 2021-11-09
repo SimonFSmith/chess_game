@@ -1,6 +1,6 @@
 import pyglet
-from pyglet.window import mouse
 from pyglet import shapes
+from pyglet.window import mouse
 
 import resources
 from history import History
@@ -9,9 +9,9 @@ from pieces.bishop import Bishop
 from pieces.king import King
 from pieces.knight import Knight
 from pieces.pawn import Pawn
+from pieces.piece import Piece
 from pieces.queen import Queen
 from pieces.rook import Rook
-from pieces.piece import Piece
 
 
 class Chess(pyglet.window.Window):
@@ -90,7 +90,8 @@ class Chess(pyglet.window.Window):
         self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225)
         self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225)
         self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225)
-        self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width), height=150, color=(200, 200, 200))
+        self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
+                                         height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
         self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE])
 
@@ -200,7 +201,7 @@ class Chess(pyglet.window.Window):
                     if self.current_pos[0] < 0 and self.current_pos[
                         1] < 0:  # Goes inside because it's initialized with -1, -1
                         if self.board[board_y][board_x] is not None and self.move == self.board[board_y][
-                        board_x].white:  # If there's a click from your side
+                            board_x].white:  # If there's a click from your side
                             self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
                             if self.move:  # If white
                                 valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
@@ -289,6 +290,7 @@ class Chess(pyglet.window.Window):
                                                               _checkmate)
                             if not self.promotion:
                                 self._publisher.dispatch(self.EVENT_PIECE_MOVED)
+            print(self.board)
         except IndexError:
             if button == mouse.LEFT:
                 # si le button undo est appuyé
@@ -297,17 +299,24 @@ class Chess(pyglet.window.Window):
                         self.change_color_press_undo()
                         self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
                         history_data = History.get_move(self._history)
-                        #msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
+                        # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
                         Piece.change_location(history_data['piece'],
                                               history_data['start_position_x'],
                                               history_data['start_position_y'],
                                               self.board)
+                        Piece.change_board_location(history_data['piece'],
+                                                    history_data['start_position_x'],
+                                                    history_data['start_position_y'],
+                                                    history_data['end_position_x'],
+                                                    history_data['end_position_y'],
+                                                    history_data['captured_piece'],
+                                                    self.board)
                         if self.move:
                             self.move = False
                         elif not self.move:
                             self.move = True
 
-
+                        print(self.board)
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
@@ -329,7 +338,7 @@ class Chess(pyglet.window.Window):
                     if self.about_x < x < (self.about_x + self.about_state.width):
                         self.change_color_press_about()
 
-    #fonction pour changer l'image du button. nécessaire pour le schedule_once
+    # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def get_history(self):
         return self._history
 
@@ -348,8 +357,10 @@ class Chess(pyglet.window.Window):
 
     def update_rules_hover(self, dt):
         self.rules_state = resources.rules_button_hover
+
     def update_stop_hover(self, dt):
         self.stop_state = resources.stop_button_hover
+
     def update_about_hover(self, dt):
         self.about_state = resources.about_button_hover
 
@@ -375,7 +386,7 @@ class Chess(pyglet.window.Window):
         self.about_state = resources.about_button_press
         pyglet.clock.schedule_once(self.update_about_hover, 0.17)
 
-    #fonction pour détecter si la souris est au dessus d'un boutton
+    # fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
         # print(x, y, dx, dy)
         # button undo

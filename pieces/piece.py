@@ -41,9 +41,13 @@ class Piece(object):
         return valid_moves
 
     # Change piece's graphical position
-    def change_location(self, x, y, board):
-        self.piece_sprite.x = x * 75
-        self.piece_sprite.y = y * 75
+    def change_location(self, start_x, start_y, board):
+        self.piece_sprite.x = start_x * 75
+        self.piece_sprite.y = start_y * 75
+
+    def change_board_location(self, start_x, start_y, end_x, end_y, captured_piece, board):
+        board[end_y][end_x] = captured_piece
+        board[start_y][start_x] = self
 
     # Draw piece on initialization
     def draw(self):
