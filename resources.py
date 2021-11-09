@@ -42,3 +42,18 @@ custom_over_bottom = pyglet.resource.image('resources/scrollbox/grip_bottom_over
 custom_down_top = pyglet.resource.image('resources/scrollbox/grip_top_down.png')
 custom_down_center = pyglet.resource.texture('resources/scrollbox/grip_vert_down.png')
 custom_down_bottom = pyglet.resource.image('resources/scrollbox/grip_bottom_down.png')
+
+# Dialog
+custom_base_image_dialog = pyglet.resource.image('resources/dialog/base.png')
+custom_over_image_dialog = pyglet.resource.image('resources/dialog/over.png')
+custom_down_image_dialog = pyglet.resource.image('resources/dialog/down.png')
+custom_center_dialog = pyglet.resource.texture('resources/dialog/center.png')
+custom_top_dialog = pyglet.resource.texture('resources/dialog/top.png')
+custom_bottom_dialog = pyglet.resource.texture('resources/dialog/bottom.png')
+custom_left_dialog = pyglet.resource.texture('resources/dialog/left.png')
+custom_right_dialog = pyglet.resource.texture('resources/dialog/right.png')
+custom_top_left_dialog = pyglet.resource.image('resources/dialog/top_left.png')
+custom_top_right_dialog = pyglet.resource.image('resources/dialog/top_right.png')
+custom_bottom_left_dialog = pyglet.resource.image('resources/dialog/bottom_left.png')
+custom_bottom_right_dialog = pyglet.resource.image('resources/dialog/bottom_right.png')
+

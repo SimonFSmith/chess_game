@@ -1,6 +1,7 @@
 import glooey
 import pyglet
 
+import resources
 from lib.publisher import Publisher
 
 
@@ -10,19 +11,29 @@ class WesnothLabel(glooey.Label):
     custom_alignment = 'center'
     custom_bold = True
 
+class WesnothTitle(glooey.Label):
+    custom_text = 'Create new game'
+    custom_color = '#000000'
+    custom_alignment = 'center'
+    custom_bold = True
+
+
+
 
 class WesnothButton(glooey.Button):
     Foreground = WesnothLabel
     Background = glooey.Image
-    custom_base_image = pyglet.resource.image('resources/dialog/base.png')
-    custom_over_image = pyglet.resource.image('resources/dialog/over.png')
-    custom_down_image = pyglet.resource.image('resources/dialog/down.png')
+    custom_base_image = resources.custom_base_image_dialog
+    custom_over_image = resources.custom_over_image_dialog
+    custom_down_image = resources.custom_down_image_dialog
+    # custom_white_king = 'resource/button/'
 
 
 class WesnothDialog(glooey.ButtonDialog):
     EVENT_BLACK_BUTTON_CLICKED = 'EVENT_BLACK_BUTTON_CLICKED'
     EVENT_WHITE_BUTTON_CLICKED = 'EVENT_WHITE_BUTTON_CLICKED'
     EVENT_DIALOG_CLOSED = 'EVENT_DIALOG_CLOSED'
+
 
     def __init__(self, *args, **kwargs):
         super(WesnothDialog, self).__init__(*args, **kwargs)
@@ -37,6 +48,11 @@ class WesnothDialog(glooey.ButtonDialog):
         self.get_buttons().add(self._cancel_button)
         self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED,
                                      self.EVENT_DIALOG_CLOSED])
+
+    def on_get_label_appeared(self, widget):
+        self._publisher.dispatch(self.EVENT_TITLE_APPEARED)
+
+
 
     def on_black_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_BLACK_BUTTON_CLICKED)
@@ -83,3 +99,7 @@ class WesnothDialog(glooey.ButtonDialog):
 
     class CancelButton(WesnothButton):
         custom_text = 'Cancel'
+
+
+
+

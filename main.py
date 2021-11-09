@@ -2,7 +2,8 @@ import glooey
 
 from gui_chess import Chess, pyglet
 from scrollbox import WesnothScrollBox
-from dialog import WesnothDialog
+from dialog import WesnothDialog, WesnothTitle
+
 
 _my_game = Chess()
 _gui = glooey.Gui(_my_game, batch=_my_game.get_batch(), group=_my_game.get_hud_group())
@@ -17,6 +18,8 @@ def _add_last_move_to_scrollbox():
 
 def _show_new_game_dialog():
     _dialog = WesnothDialog()
+    _label = WesnothTitle()
+    _dialog.add(_label)
     _gui.add(_dialog)
     _dialog.get_publisher().register(_dialog.EVENT_BLACK_BUTTON_CLICKED, "main", _set_player_turn_black)
     _dialog.get_publisher().register(_dialog.EVENT_WHITE_BUTTON_CLICKED, "main", _set_player_turn_white)
@@ -27,7 +30,6 @@ def _show_new_game_dialog():
 def _set_player_turn_black():
     _my_game.set_move(False)
     _my_game.set_block_screen(False)
-
 
 def _set_player_turn_white():
     _my_game.set_move(True)
