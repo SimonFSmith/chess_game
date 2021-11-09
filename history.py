@@ -28,6 +28,9 @@ class History:
     def update_move(self, _updated_move, _index: int = -1):
         self._history[_index] = _updated_move
 
+    def delete_move(self, _index: int = -1):
+        self._history.pop(_index)
+
     # Formats move to respect algebraic notation
     def format_move(self, _index: int = -1):
         _move = self._history[_index]
@@ -56,6 +59,11 @@ class History:
                 _str += "#"  # Checkmate notation
 
         return _str
+
+    def save_history(self):
+        with open("save.txt", "w") as stream:
+            for i in range(len(self._history)):
+                stream.write(self.format_move(i) + ("\n" if i != len(self._history) - 1 else ""))
 
     # Creates a dictionary of squares name
     def create_notations(self, keys, values):

@@ -300,7 +300,6 @@ class Chess(pyglet.window.Window):
                         if self.undo_x < x < (self.undo_x + self.undo_state.width):
                             self.undo_state = resources.undo_button_press
                             pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
-                            self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
                             history_data = History.get_move(self._history)
                             # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
                             Piece.change_location(history_data['piece'],
@@ -321,12 +320,14 @@ class Chess(pyglet.window.Window):
                                 self.move = False
                             elif not self.move:
                                 self.move = True
+                            self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
                     if self.add_x < x < (self.add_x + self.add_state.width):
                         self.add_state = resources.add_button_press
                         pyglet.clock.schedule_once(self.update_add_hover, 0.17)
+                        self._history.save_history()
 
                 # si le button rules est appuyé
                 if self.rules_y < y < (self.rules_y + self.rules_state.height):
