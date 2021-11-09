@@ -304,13 +304,15 @@ class Chess(pyglet.window.Window):
                                               history_data['start_position_x'],
                                               history_data['start_position_y'],
                                               self.board)
-                        self.change_board_location(history_data['piece'],
+                        self.change_board_location(history_data["color"],
+                                                   history_data['piece'],
+                                                   history_data['captured_piece'],
                                                    history_data['start_position_x'],
                                                    history_data['start_position_y'],
                                                    history_data['end_position_x'],
                                                    history_data['end_position_y'],
-                                                   history_data['captured_piece'],
                                                    history_data['castling'],
+                                                   history_data['check'],
                                                    self.board)
                         if self.move:
                             self.move = False
@@ -389,8 +391,9 @@ class Chess(pyglet.window.Window):
         self.about_state = resources.about_button_press
         pyglet.clock.schedule_once(self.update_about_hover, 0.17)
 
-    def change_board_location(self, piece, start_x, start_y, end_x, end_y, captured_piece, castling, board):
-        if castling:
+    def change_board_location(self, color, piece, captured_piece, start_x, start_y, end_x, end_y, castling, check,
+                              board):
+        if castling is not None:
             if castling == [castling[0], 7]:  # kingside
                 _rook = self.board[castling[0]][5]
                 self.board[castling[0]][5] = None
@@ -401,6 +404,12 @@ class Chess(pyglet.window.Window):
                 self.board[castling[0]][3] = None
                 self.board[castling[0]][castling[1]] = _rook
                 _rook.change_location(castling[1], castling[0], board)
+
+        if check:
+            if color:  # white
+                self.black_king.danger.visible = False
+            else:  # black
+                self.white_king.danger.visible = False
 
         board[end_y][end_x] = captured_piece
         board[start_y][start_x] = piece
