@@ -1,5 +1,4 @@
 import glooey
-import pyglet
 
 import resources
 from lib.publisher import Publisher
@@ -18,15 +17,12 @@ class WesnothTitle(glooey.Label):
     custom_bold = True
 
 
-
-
 class WesnothButton(glooey.Button):
     Foreground = WesnothLabel
     Background = glooey.Image
     custom_base_image = resources.custom_base_image_dialog
     custom_over_image = resources.custom_over_image_dialog
     custom_down_image = resources.custom_down_image_dialog
-    # custom_white_king = 'resource/button/'
 
 
 class WesnothDialog(glooey.ButtonDialog):
@@ -49,10 +45,6 @@ class WesnothDialog(glooey.ButtonDialog):
         self._publisher = Publisher([self.EVENT_BLACK_BUTTON_CLICKED, self.EVENT_WHITE_BUTTON_CLICKED,
                                      self.EVENT_DIALOG_CLOSED])
 
-    def on_get_label_appeared(self, widget):
-        self._publisher.dispatch(self.EVENT_TITLE_APPEARED)
-
-
 
     def on_black_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_BLACK_BUTTON_CLICKED)
@@ -70,15 +62,17 @@ class WesnothDialog(glooey.ButtonDialog):
         return self._publisher
 
     class Decoration(glooey.Background):
-        custom_center = pyglet.resource.texture('resources/dialog/center.png')
-        custom_top = pyglet.resource.texture('resources/dialog/top.png')
-        custom_bottom = pyglet.resource.texture('resources/dialog/bottom.png')
-        custom_left = pyglet.resource.texture('resources/dialog/left.png')
-        custom_right = pyglet.resource.texture('resources/dialog/right.png')
-        custom_top_left = pyglet.resource.image('resources/dialog/top_left.png')
-        custom_top_right = pyglet.resource.image('resources/dialog/top_right.png')
-        custom_bottom_left = pyglet.resource.image('resources/dialog/bottom_left.png')
-        custom_bottom_right = pyglet.resource.image('resources/dialog/bottom_right.png')
+        custom_center = resources.custom_center_image_dialog
+        custom_top = resources.custom_top_image_dialog
+        custom_bottom = resources.custom_bottom_image_dialog
+        custom_left = resources.custom_left_image_dialog
+        custom_right = resources.custom_right_image_dialog
+        custom_top_left = resources.custom_top_left_image_dialog
+        custom_top_right = resources.custom_top_right_image_dialog
+        custom_bottom_left = resources.custom_bottom_left_image_dialog
+        custom_bottom_right = resources.custom_bottom_right_image_dialog
+        custom_middle = resources.custom_button_white_king
+
 
     class Box(glooey.Grid):
         custom_right_padding = 14
@@ -87,9 +81,10 @@ class WesnothDialog(glooey.ButtonDialog):
         custom_bottom_padding = 17
         custom_cell_padding = 9
 
-    class Buttons(glooey.HBox):
+    class Button(glooey.HBox):
         custom_cell_padding = 3
         custom_alignment = 'right'
+
 
     class BlackButton(WesnothButton):
         custom_text = 'Black'
@@ -97,8 +92,11 @@ class WesnothDialog(glooey.ButtonDialog):
     class WhiteButton(WesnothButton):
         custom_text = 'White'
 
+
+
     class CancelButton(WesnothButton):
         custom_text = 'Cancel'
+
 
 
 
