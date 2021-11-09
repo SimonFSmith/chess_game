@@ -327,7 +327,6 @@ class Chess(pyglet.window.Window):
                     if self.add_x < x < (self.add_x + self.add_state.width):
                         self.add_state = resources.add_button_press
                         pyglet.clock.schedule_once(self.update_add_hover, 0.17)
-                        self._history.save_history()
 
                 # si le button rules est appuyé
                 if self.rules_y < y < (self.rules_y + self.rules_state.height):
