@@ -29,7 +29,6 @@ class King(Piece):
             _castling = [start_y, 7]
         elif start_x == self.piece_sprite.x // 75 - 2:  # castling queenside
             board[start_y][0].change_location(3, start_y, board)
-            print(start_y, 0)
             board[start_y][3] = board[start_y][0]
             board[start_y][0] = None
             board[start_y][2] = self
