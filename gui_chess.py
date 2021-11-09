@@ -18,6 +18,7 @@ class Chess(pyglet.window.Window):
     # Events
     EVENT_PIECE_MOVED = "EVENT_PIECE_MOVED"
     EVENT_MOVE_UNDONE = "EVENT_MOVE_UNDONE"
+    EVENT_LIST_CLEAR = "EVENT_LIST_CLEAR"
 
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -94,7 +95,7 @@ class Chess(pyglet.window.Window):
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
                                          height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
-        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE])
+        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_LIST_CLEAR])
 
     def on_draw(self):
         # Board initialization
@@ -339,6 +340,26 @@ class Chess(pyglet.window.Window):
                     if self.stop_x < x < (self.stop_x + self.stop_state.width):
                         self.stop_state = resources.stop_button_press
                         pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
+
+                        self._publisher.dispatch(self.EVENT_LIST_CLEAR)
+                        #//////////////////////
+                        self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
+                        self.black_king = King(4, 7, False)  # If type is False, piece is black
+                        # Pieces are placed on the board, starting from white, then 4 empty lines and black
+                        self.board = [
+                            [Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
+                             Knight(6, 0), Rook(7, 0)],
+                            [Pawn(i, 1) for i in range(8)],
+                            [None for i in range(8)],
+                            [None for i in range(8)],
+                            [None for i in range(8)],
+                            [None for i in range(8)],
+                            [Pawn(i, 6, False) for i in range(8)],
+                            [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
+                             self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
+
+                        self.move = True
+                        #/////////////////////
 
                 # si le button about est appuyé
                 if self.about_y < y < (self.about_y + self.about_state.height):
