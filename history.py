@@ -34,7 +34,7 @@ class History:
         _str = ""
 
         if _move["castling"] is not None:  # If castling
-            _str += "0-0" if _move["castling"] == "kingside" else "0-0-0"
+            _str += "0-0" if _move["castling"][1] == 7 else "0-0-0"
         else:  # If not
             if _move["promotion"] is None:
                 _str += _move["piece"].__class__.__name__[1].upper() if isinstance(_move["piece"], Knight) else \
