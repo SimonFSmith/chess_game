@@ -22,7 +22,6 @@ class WesnothScrollBox(glooey.ScrollBox):
 
     def delete_label_last_line(self):
         _split_text = self._text.rsplit("\n", 2)
-        print(_split_text)
 
         if _split_text[0] == "​" or _split_text[1] == "":
             self._text = "​"
