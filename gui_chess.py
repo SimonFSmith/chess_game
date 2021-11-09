@@ -50,6 +50,7 @@ class Chess(pyglet.window.Window):
 
     # History
     _history = History()
+    _can_cancel_last_move = True
 
     def __init__(self):
         # Board is initialized with its screen size.
@@ -288,36 +289,38 @@ class Chess(pyglet.window.Window):
                                                               _promoted_pawn, _castling,
                                                               self.white_king.danger.visible if self.move else self.black_king.danger.visible,
                                                               _checkmate)
+                            self._can_cancel_last_move = True
                             if not self.promotion:
                                 self._publisher.dispatch(self.EVENT_PIECE_MOVED)
         except IndexError:
             if button == mouse.LEFT:
                 # si le button undo est appuyé
-                if self.undo_y < y < (self.undo_y + self.undo_state.height):
-                    if self.undo_x < x < (self.undo_x + self.undo_state.width):
-                        self.undo_state = resources.undo_button_press
-                        pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
-                        self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
-                        history_data = History.get_move(self._history)
-                        # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
-                        Piece.change_location(history_data['piece'],
-                                              history_data['start_position_x'],
-                                              history_data['start_position_y'],
-                                              self.board)
-                        self.change_board_location(history_data["color"],
-                                                   history_data['piece'],
-                                                   history_data['captured_piece'],
-                                                   history_data['start_position_x'],
-                                                   history_data['start_position_y'],
-                                                   history_data['end_position_x'],
-                                                   history_data['end_position_y'],
-                                                   history_data['castling'],
-                                                   history_data['check'],
-                                                   self.board)
-                        if self.move:
-                            self.move = False
-                        elif not self.move:
-                            self.move = True
+                if self._can_cancel_last_move:
+                    if self.undo_y < y < (self.undo_y + self.undo_state.height):
+                        if self.undo_x < x < (self.undo_x + self.undo_state.width):
+                            self.undo_state = resources.undo_button_press
+                            pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
+                            self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
+                            history_data = History.get_move(self._history)
+                            # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
+                            Piece.change_location(history_data['piece'],
+                                                  history_data['start_position_x'],
+                                                  history_data['start_position_y'],
+                                                  self.board)
+                            self.change_board_location(history_data["color"],
+                                                       history_data['piece'],
+                                                       history_data['captured_piece'],
+                                                       history_data['start_position_x'],
+                                                       history_data['start_position_y'],
+                                                       history_data['end_position_x'],
+                                                       history_data['end_position_y'],
+                                                       history_data['castling'],
+                                                       history_data['check'],
+                                                       self.board)
+                            if self.move:
+                                self.move = False
+                            elif not self.move:
+                                self.move = True
 
                 # si le button add est appuyé
                 if self.add_y < y < (self.add_y + self.add_state.height):
@@ -393,6 +396,7 @@ class Chess(pyglet.window.Window):
 
     def change_board_location(self, color, piece, captured_piece, start_x, start_y, end_x, end_y, castling, check,
                               board):
+        self._can_cancel_last_move = False
         if castling is not None:
             if castling == [castling[0], 7]:  # kingside
                 _rook = self.board[castling[0]][5]
