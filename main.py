@@ -21,6 +21,7 @@ def _delete_last_move():
 
 _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_move_to_scrollbox)
 _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_last_move)
+_my_game.get_publisher().register(_my_game.EVENT_LIST_CLEAR, "main", _scrollbox.clear_label_list)
 
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60)
 pyglet.app.run()
