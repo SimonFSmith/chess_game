@@ -14,6 +14,10 @@ class WesnothScrollBox(glooey.ScrollBox):
         self._label = glooey.Label(self._text)
         self._label.set_color("#000000")
         self._label.set_bold(True)
+        self.new_label()
+
+    def new_label(self):
+        self.clear()
         self.add(self._label)
 
     def update_label_text(self, text):
@@ -33,6 +37,7 @@ class WesnothScrollBox(glooey.ScrollBox):
     def clear_label(self):
         self._text = "​"
         self._label.set_text(self._text)
+        self.new_label()
 
     class Frame(glooey.Frame):
         class Decoration(glooey.Background):
