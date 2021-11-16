@@ -1,3 +1,4 @@
+import glooey
 import pyglet
 from pyglet import shapes
 from pyglet.window import mouse
@@ -12,6 +13,7 @@ from pieces.pawn import Pawn
 from pieces.piece import Piece
 from pieces.queen import Queen
 from pieces.rook import Rook
+from scrollbox import WesnothScrollBox
 
 
 class Chess(pyglet.window.Window):
@@ -22,9 +24,6 @@ class Chess(pyglet.window.Window):
     chessboard = resources.chessboard
     valid_img = resources.valid_img
     promo_img = resources.promo_img
-    current_pos = (-1, -1)
-    move = True  # White if true, Black if false
-    promotion = False
     sprite_image = resources.sprite_image
     sprite_sheet = pyglet.image.ImageGrid(sprite_image, 2, 6)
     menu_bar = shapes.Rectangle
@@ -48,10 +47,6 @@ class Chess(pyglet.window.Window):
     window_x = 1000
     window_y = 600
 
-    # History
-    _history = History()
-    _can_cancel_last_move = True
-
     def __init__(self):
         # Board is initialized with its screen size.
         super(Chess, self).__init__(self.window_x, self.window_y,
@@ -59,20 +54,7 @@ class Chess(pyglet.window.Window):
                                     caption='Chess',
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
                                     vsync=False)  # FPS
-        self._batch = pyglet.graphics.Batch()
-        self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
-        self.black_king = King(4, 7, False)  # If type is False, piece is black
-        # Pieces are placed on the board, starting from white, then 4 empty lines and black
-        self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
-                       Knight(6, 0), Rook(7, 0)],
-                      [Pawn(i, 1) for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [Pawn(i, 6, False) for i in range(8)],
-                      [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
-                       self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
+        self.reset()
         # List containing images of the dot when it's possible to move
         self.valid_sprites = []
         for i in range(8):
@@ -124,6 +106,32 @@ class Chess(pyglet.window.Window):
                 self.white_rook.draw()
                 self.white_bishop.draw()
                 self.white_knight.draw()
+
+    def reset(self):
+        self.current_pos = (-1, -1)
+        self.move = True  # White if true, Black if false
+        self.promotion = False
+        # History
+        self._history = History()
+        self._can_cancel_last_move = True
+
+        self._batch = pyglet.graphics.Batch()
+        self._gui = glooey.Gui(self, batch=self._batch)
+        self._scrollbox = WesnothScrollBox()
+        self._gui.add(self._scrollbox)
+        self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
+        self.black_king = King(4, 7, False)  # If type is False, piece is black
+        # Pieces are placed on the board, starting from white, then 4 empty lines and black
+        self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
+                       Knight(6, 0), Rook(7, 0)],
+                      [Pawn(i, 1) for i in range(8)],
+                      [None for i in range(8)],
+                      [None for i in range(8)],
+                      [None for i in range(8)],
+                      [None for i in range(8)],
+                      [Pawn(i, 6, False) for i in range(8)],
+                      [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
+                       self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Declaring variables for the history
@@ -339,6 +347,7 @@ class Chess(pyglet.window.Window):
                     if self.stop_x < x < (self.stop_x + self.stop_state.width):
                         self.stop_state = resources.stop_button_press
                         pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
+                        self.reset()
 
                 # si le button about est appuyé
                 if self.about_y < y < (self.about_y + self.about_state.height):
@@ -355,6 +364,9 @@ class Chess(pyglet.window.Window):
 
     def get_publisher(self):
         return self._publisher
+
+    def get_scrollbox(self):
+        return self._scrollbox
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
