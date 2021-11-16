@@ -26,12 +26,12 @@ def _show_new_game_dialog():
 
 
 def _set_player_turn_black():
-    _my_game.set_move(False)
+    _my_game.reset(False)
     _my_game.set_block_screen(False)
 
 
 def _set_player_turn_white():
-    _my_game.set_move(True)
+    _my_game.reset()
     _my_game.set_block_screen(False)
 
 

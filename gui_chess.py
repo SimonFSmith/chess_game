@@ -55,7 +55,9 @@ class Chess(pyglet.window.Window):
                                     caption='Chess',
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
                                     vsync=False)  # FPS
+        self._move = True  # White if true, Black if false
         self.reset()
+        self._block_screen = False
         # List containing images of the dot when it's possible to move
         self.valid_sprites = []
         for i in range(8):
@@ -110,9 +112,7 @@ class Chess(pyglet.window.Window):
 
     def reset(self, color=True):
         self.current_pos = (-1, -1)
-        self._move = color  # White if true, Black if false
         self.promotion = False
-        self._block_screen = False
         # History
         self._history = History()
         self._can_cancel_last_move = True
@@ -122,10 +122,10 @@ class Chess(pyglet.window.Window):
         self._hud = pyglet.graphics.OrderedGroup(1)
         self.chessboard = pyglet.sprite.Sprite(img=resources.chessboard, x=0, y=0, batch=self._batch,
                                                group=self._foreground)
-        self._gui = glooey.Gui(self, batch=self._batch)
+        self._gui = glooey.Gui(self, batch=self._batch, group=self._hud)
         self._scrollbox = WesnothScrollBox()
         self._gui.add(self._scrollbox)
-        if self._move:
+        if color:
             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
             self.black_king = King(4, 7, False)  # If type is False, piece is black
 
@@ -350,10 +350,10 @@ class Chess(pyglet.window.Window):
                                                       history_data['castling'],
                                                       history_data['check'],
                                                       self.board)
-                                if self.move:
-                                    self.move = False
-                                elif not self.move:
-                                    self.move = True
+                                if self._move:
+                                    self._move = False
+                                elif not self._move:
+                                    self._move = True
                                 self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
 
                         # si le button add est appuyé
