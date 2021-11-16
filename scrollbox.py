@@ -4,8 +4,10 @@ import resources
 
 
 class WesnothScrollBox(glooey.ScrollBox):
-    custom_alignment = 'right'
-    custom_height_hint = 200
+    custom_alignment = 'top right'
+    custom_height_hint = 450
+    custom_width_hint = 80
+    custom_horz_padding = 150
 
     def __init__(self):
         super(WesnothScrollBox, self).__init__()
