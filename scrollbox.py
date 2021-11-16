@@ -34,10 +34,6 @@ class WesnothScrollBox(glooey.ScrollBox):
         self._text = "​"
         self._label.set_text(self._text)
 
-    def clear_label_list(self):
-        self._text = " "
-        self._label.set_text(self._text)
-
     class Frame(glooey.Frame):
         class Decoration(glooey.Background):
             custom_center = resources.custom_center
