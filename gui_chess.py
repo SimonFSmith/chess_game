@@ -107,9 +107,9 @@ class Chess(pyglet.window.Window):
                 self.white_bishop.draw()
                 self.white_knight.draw()
 
-    def reset(self):
+    def reset(self, color=True):
         self.current_pos = (-1, -1)
-        self.move = True  # White if true, Black if false
+        self.move = color  # White if true, Black if false
         self.promotion = False
         # History
         self._history = History()
@@ -119,19 +119,38 @@ class Chess(pyglet.window.Window):
         self._gui = glooey.Gui(self, batch=self._batch)
         self._scrollbox = WesnothScrollBox()
         self._gui.add(self._scrollbox)
-        self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
-        self.black_king = King(4, 7, False)  # If type is False, piece is black
-        # Pieces are placed on the board, starting from white, then 4 empty lines and black
-        self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
-                       Knight(6, 0), Rook(7, 0)],
-                      [Pawn(i, 1) for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [None for i in range(8)],
-                      [Pawn(i, 6, False) for i in range(8)],
-                      [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
-                       self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
+        if self.move:
+            self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
+            self.black_king = King(4, 7, False)  # If type is False, piece is black
+
+
+            # Pieces are placed on the board, starting from white, then 4 empty lines and black
+            self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
+                           Knight(6, 0), Rook(7, 0)],
+                          [Pawn(i, 1) for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [Pawn(i, 6, False) for i in range(8)],
+                          [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
+                           self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
+        else:
+            self.white_king = King(4, 0, False)  # Placement is made from right to left and from bottom to top
+            self.black_king = King(4, 7)  # If type is False, piece is black
+            # Pieces are placed on the board, starting from white, then 4 empty lines and black
+            self.board = [[Rook(0, 0, False), Knight(1, 0, False), Bishop(2, 0, False), Queen(3, 0, False),
+                           self.white_king, Bishop(5, 0, False),
+                           Knight(6, 0, False), Rook(7, 0, False)],
+                          [Pawn(i, 1, False) for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [None for i in range(8)],
+                          [Pawn(i, 6) for i in range(8)],
+                          [Rook(0, 7), Knight(1, 7), Bishop(2, 7), Queen(3, 7),
+                           self.black_king, Bishop(5, 7), Knight(6, 7), Rook(7, 7)]]
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Declaring variables for the history
