@@ -35,16 +35,19 @@ class Chess(pyglet.window.Window):
     rules_state = resources.rules_button_black
     stop_state = resources.stop_button_hover
     about_state = resources.about_button_black
-    undo_x = 605
-    undo_y = 90
-    add_x = 690
+    save_state = resources.save_button_black
+    add_x = 650
     add_y = 90
-    rules_x = 775
-    rules_y = 90
-    stop_x = 860
+    undo_x = 775
+    undo_y = 90
+    stop_x = 900
     stop_y = 90
-    about_x = 945
-    about_y = 90
+    save_x = 650
+    save_y = 25
+    rules_x = 775
+    rules_y = 25
+    about_x = 900
+    about_y = 25
 
     window_x = 1000
     window_y = 600
@@ -108,6 +111,7 @@ class Chess(pyglet.window.Window):
         self.rules_state.blit(self.rules_x, self.rules_y)
         self.stop_state.blit(self.stop_x, self.stop_y)
         self.about_state.blit(self.about_x, self.about_y)
+        self.save_state.blit(self.save_x, self.save_y)
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] is not None: self.board[i][j].draw()
@@ -334,7 +338,7 @@ class Chess(pyglet.window.Window):
                     if self.rules_x < x < (self.rules_x + self.rules_state.width):
                         self.rules_state = resources.rules_button_press
                         pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
-                        self._history.save_history()
+
 
                 # si le button stop est appuyé
                 if self.stop_y < y < (self.stop_y + self.stop_state.height):
@@ -368,6 +372,13 @@ class Chess(pyglet.window.Window):
                         self.about_state = resources.about_button_press
                         pyglet.clock.schedule_once(self.update_about_hover, 0.17)
 
+                # si le button save est appuyé
+                if self.save_y < y < (self.save_y + self.save_state.height):
+                    if self.save_x < x < (self.save_x + self.save_state.width):
+                        self.save_state = resources.save_button_press
+                        pyglet.clock.schedule_once(self.update_save_hover, 0.17)
+                        self._history.save_history()
+
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def get_history(self):
         return self._history
@@ -394,27 +405,8 @@ class Chess(pyglet.window.Window):
     def update_about_hover(self, dt):
         self.about_state = resources.about_button_hover
 
-    # fonction pour changer la couleur du boutton lors d'un clique
-    def change_color_press_undo(self):
-        self.undo_state = resources.undo_button_press
-        pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
-
-    def change_color_press_add(self):
-        self.add_state = resources.add_button_press
-        pyglet.clock.schedule_once(self.update_add_hover, 0.17)
-
-    def change_color_press_rules(self):
-        self.rules_state = resources.rules_button_press
-        pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
-
-    # fonction pour détecter si la souris est au dessus d'un boutton
-    def change_color_press_stop(self):
-        self.stop_state = resources.stop_button_press
-        pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
-
-    def change_color_press_about(self):
-        self.about_state = resources.about_button_press
-        pyglet.clock.schedule_once(self.update_about_hover, 0.17)
+    def update_save_hover(self, dt):
+        self.save_state = resources.save_button_hover
 
     def cancel_last_move(self, color, piece, captured_piece, start_x, start_y, end_x, end_y, castling, check,
                          board):
@@ -483,6 +475,13 @@ class Chess(pyglet.window.Window):
             self.about_state = resources.about_button_hover
         else:
             self.about_state = resources.about_button_black
+
+        # button save
+        if self.save_x + self.save_state.width > x > self.save_x \
+            and self.save_y + self.save_state.height > y > self.save_y:
+            self.save_state = resources.save_button_hover
+        else:
+            self.save_state = resources.save_button_black
 
     def update(self, dt):
         self.on_draw()

@@ -26,6 +26,10 @@ rules_button_black = pyglet.resource.image('resources/button_rules_black.png')
 rules_button_hover = pyglet.resource.image('resources/button_rules_hover.png')
 rules_button_press = pyglet.resource.image('resources/button_rules_press.png')
 
+save_button_black = pyglet.resource.image('resources/save_button_black.png')
+save_button_hover = pyglet.resource.image('resources/save_button_hover.png')
+save_button_press = pyglet.resource.image('resources/save_button_press.png')
+
 # Scrollbox
 custom_center = pyglet.resource.texture('resources/scrollbox/center.png')
 custom_top = pyglet.resource.image('resources/scrollbox/bar_top.png')
