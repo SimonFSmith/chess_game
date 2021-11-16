@@ -1,5 +1,6 @@
 from pieces.knight import Knight
-
+import datetime
+import os
 
 class History:
     def __init__(self):
@@ -61,9 +62,13 @@ class History:
         return _str
 
     def save_history(self):
-        with open("save.txt", "w") as stream:
+        dt = datetime.datetime.now()
+        if not os.path.exists('game_history'):
+            os.makedirs('game_history')
+        with open(f"game_history/{dt.today().strftime('%b-%d-%Y-%H-%M-%S')}.txt", "w") as stream:
             for i in range(len(self._history)):
                 stream.write(self.format_move(i) + ("\n" if i != len(self._history) - 1 else ""))
+
 
     def clear_history(self):
         self._history.clear()
