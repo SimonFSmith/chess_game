@@ -68,9 +68,3 @@ custom_top_left_image_dialog = pyglet.resource.image('resources/dialog/top_left.
 custom_top_right_image_dialog = pyglet.resource.image('resources/dialog/top_right.png')
 custom_bottom_left_image_dialog = pyglet.resource.image('resources/dialog/bottom_left.png')
 custom_bottom_right_image_dialog = pyglet.resource.image('resources/dialog/bottom_right.png')
-
-
-#Test
-custom_button_white_king = pyglet.resource.image('resources/button/kingwhite.png')
-
-

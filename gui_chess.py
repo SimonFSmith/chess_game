@@ -120,14 +120,14 @@ class Chess(pyglet.window.Window):
         self._batch = pyglet.graphics.Batch()
         self._foreground = pyglet.graphics.OrderedGroup(0)
         self._hud = pyglet.graphics.OrderedGroup(1)
-        self.chessboard = pyglet.sprite.Sprite(img=resources.chessboard, x=0, y=0, batch=self._batch ,group=self._foreground)
+        self.chessboard = pyglet.sprite.Sprite(img=resources.chessboard, x=0, y=0, batch=self._batch,
+                                               group=self._foreground)
         self._gui = glooey.Gui(self, batch=self._batch)
         self._scrollbox = WesnothScrollBox()
         self._gui.add(self._scrollbox)
-        if self.move:
+        if self._move:
             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
             self.black_king = King(4, 7, False)  # If type is False, piece is black
-
 
             # Pieces are placed on the board, starting from white, then 4 empty lines and black
             self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
@@ -156,11 +156,10 @@ class Chess(pyglet.window.Window):
                           [Rook(0, 7), Knight(1, 7), Bishop(2, 7), Queen(3, 7),
                            self.black_king, Bishop(5, 7), Knight(6, 7), Rook(7, 7)]]
 
-
     def on_mouse_press(self, x, y, button, modifiers):
         if not self._block_screen:
 
-        # Declaring variables for the history
+            # Declaring variables for the history
             _start_position_x = -1
             _start_position_y = -1
             _moved_piece = None
@@ -276,9 +275,10 @@ class Chess(pyglet.window.Window):
                                 _start_position_x = self.current_pos[1]
                                 _start_position_y = self.current_pos[0]
                                 self.board[board_y][board_x] = self.board[self.current_pos[0]][self.current_pos[1]]
-                                _castling = self.board[self.current_pos[0]][self.current_pos[1]].change_location(board_x,
-                                                                                                                 board_y,
-                                                                                                                 self.board)  # Board takes the current position
+                                _castling = self.board[self.current_pos[0]][self.current_pos[1]].change_location(
+                                    board_x,
+                                    board_y,
+                                    self.board)  # Board takes the current position
                                 _moved_piece = self.board[board_y][board_x]
 
                                 if type(self.board[self.current_pos[0]][self.current_pos[1]]) is Pawn and (
@@ -319,7 +319,8 @@ class Chess(pyglet.window.Window):
 
                                 # Adds previous move to history
                                 self._history.add_move_to_history(not self._move, _moved_piece, _captured_piece,
-                                                                  _start_position_x, _start_position_y, board_x, board_y,
+                                                                  _start_position_x, _start_position_y, board_x,
+                                                                  board_y,
                                                                   _promoted_pawn, _castling,
                                                                   self.white_king.danger.visible if self._move else self.black_king.danger.visible,
                                                                   _checkmate)
@@ -361,7 +362,6 @@ class Chess(pyglet.window.Window):
                                 self.change_color_press_add()
                                 self._publisher.dispatch(self.EVENT_NEW_GAME)
 
-
                         # si le button rules est appuyé
                         if self.rules_y < y < (self.rules_y + self.rules_state.height):
                             if self.rules_x < x < (self.rules_x + self.rules_state.width):
@@ -382,6 +382,9 @@ class Chess(pyglet.window.Window):
 
     def get_hud_group(self):
         return self._hud
+
+    def get_gui(self):
+        return self._gui
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def get_history(self):
