@@ -299,14 +299,13 @@ class Chess(pyglet.window.Window):
                                 self._publisher.dispatch(self.EVENT_PIECE_MOVED)
         except IndexError:
             if button == mouse.LEFT:
-                # si le button undo est appuyé
+                # if undo button is clicked
                 if self._can_cancel_last_move:
                     if self.undo_y < y < (self.undo_y + self.undo_state.height):
                         if self.undo_x < x < (self.undo_x + self.undo_state.width):
                             self.undo_state = resources.undo_button_press
                             pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
                             history_data = History.get_move(self._history)
-                            # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
                             Piece.change_location(history_data['piece'],
                                                   history_data['start_position_x'],
                                                   history_data['start_position_y'],
@@ -327,27 +326,25 @@ class Chess(pyglet.window.Window):
                                 self.move = True
                             self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
 
-                # si le button add est appuyé
+                # if add button is clicked
                 if self.add_y < y < (self.add_y + self.add_state.height):
                     if self.add_x < x < (self.add_x + self.add_state.width):
                         self.add_state = resources.add_button_press
                         pyglet.clock.schedule_once(self.update_add_hover, 0.17)
 
-                # si le button rules est appuyé
+                # if rules button is clicked
                 if self.rules_y < y < (self.rules_y + self.rules_state.height):
                     if self.rules_x < x < (self.rules_x + self.rules_state.width):
                         self.rules_state = resources.rules_button_press
                         pyglet.clock.schedule_once(self.update_rules_hover, 0.17)
 
-
-                # si le button stop est appuyé
+                # if stop button is clicked
                 if self.stop_y < y < (self.stop_y + self.stop_state.height):
                     if self.stop_x < x < (self.stop_x + self.stop_state.width):
                         self.stop_state = resources.stop_button_press
                         pyglet.clock.schedule_once(self.update_stop_hover, 0.17)
 
                         self._publisher.dispatch(self.EVENT_LIST_CLEAR)
-                        #//////////////////////
                         self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
                         self.black_king = King(4, 7, False)  # If type is False, piece is black
                         # Pieces are placed on the board, starting from white, then 4 empty lines and black
@@ -364,7 +361,6 @@ class Chess(pyglet.window.Window):
                              self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
 
                         self.move = True
-                        #/////////////////////
 
                 # si le button about est appuyé
                 if self.about_y < y < (self.about_y + self.about_state.height):
