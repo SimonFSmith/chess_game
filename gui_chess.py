@@ -57,24 +57,7 @@ class Chess(pyglet.window.Window):
                                     vsync=False)  # FPS
         self.reset()
         self._block_screen = False
-        # List containing images of the dot when it's possible to move
-        self.valid_sprites = []
-        for i in range(8):
-            row_sprites = []
-            for j in range(8):
-                sprite = pyglet.sprite.Sprite(self.valid_img, 75 * j, 75 * i, group=self._foreground)
-                sprite.visible = False
-                row_sprites.append(sprite)
-            self.valid_sprites.append(row_sprites)
         # Used during promotion of the pawn to display promotion choices
-        self.white_queen = pyglet.sprite.Sprite(self.sprite_sheet[7], 131.25, 225, group=self._foreground)
-        self.white_rook = pyglet.sprite.Sprite(self.sprite_sheet[10], 218.75, 225, group=self._foreground)
-        self.white_bishop = pyglet.sprite.Sprite(self.sprite_sheet[8], 306.25, 225, group=self._foreground)
-        self.white_knight = pyglet.sprite.Sprite(self.sprite_sheet[9], 393.75, 225, group=self._foreground)
-        self.black_queen = pyglet.sprite.Sprite(self.sprite_sheet[1], 131.25, 225, group=self._foreground)
-        self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225, group=self._foreground)
-        self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225, group=self._foreground)
-        self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225, group=self._foreground)
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
                                          height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
@@ -91,6 +74,7 @@ class Chess(pyglet.window.Window):
         self.rules_state.blit(self.rules_x, self.rules_y)
         self.stop_state.blit(self.stop_x, self.stop_y)
         self.about_state.blit(self.about_x, self.about_y)
+
         for i in range(8):
             for j in range(8):
                 if self.board[i][j] is not None: self.board[i][j].draw()
@@ -112,7 +96,6 @@ class Chess(pyglet.window.Window):
     def reset(self, color=True):
         self.current_pos = (-1, -1)
         self.promotion = False
-        # History
         self._history = History()
         self._can_cancel_last_move = True
 
@@ -124,7 +107,9 @@ class Chess(pyglet.window.Window):
         self._gui = glooey.Gui(self, batch=self._batch, group=self._hud)
         self._scrollbox = WesnothScrollBox()
         self._gui.add(self._scrollbox)
+
         if color:
+            self._move = True
             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
             self.black_king = King(4, 7, False, False)  # If type is False, piece is black
 
@@ -137,14 +122,26 @@ class Chess(pyglet.window.Window):
                           [None for i in range(8)],
                           [None for i in range(8)],
                           [Pawn(i, 6, False, False) for i in range(8)],
-                          [Rook(0, 7, False, False), Knight(1, 7, False, False), Bishop(2, 7, False, False), Queen(3, 7, False, False),
-                           self.black_king, Bishop(5, 7, False, False), Knight(6, 7, False, False), Rook(7, 7, False, False)]]
-            self._move = True
+                          [Rook(0, 7, False, False), Knight(1, 7, False, False), Bishop(2, 7, False, False),
+                           Queen(3, 7, False, False),
+                           self.black_king, Bishop(5, 7, False, False), Knight(6, 7, False, False),
+                           Rook(7, 7, False, False)]]
+
+            self.white_queen = pyglet.sprite.Sprite(self.sprite_sheet[7], 131.25, 225, group=self._foreground)
+            self.white_rook = pyglet.sprite.Sprite(self.sprite_sheet[10], 218.75, 225, group=self._foreground)
+            self.white_bishop = pyglet.sprite.Sprite(self.sprite_sheet[8], 306.25, 225, group=self._foreground)
+            self.white_knight = pyglet.sprite.Sprite(self.sprite_sheet[9], 393.75, 225, group=self._foreground)
+            self.black_queen = pyglet.sprite.Sprite(self.sprite_sheet[1], 131.25, 225, group=self._foreground)
+            self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225, group=self._foreground)
+            self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225, group=self._foreground)
+            self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225, group=self._foreground)
         else:
+            self._move = False
             self.white_king = King(4, 0, True, False)  # Placement is made from right to left and from bottom to top
             self.black_king = King(4, 7, False, True)  # If type is False, piece is black
             # Pieces are placed on the board, starting from white, then 4 empty lines and black
-            self.board = [[Rook(0, 0, True, False), Knight(1, 0, True, False), Bishop(2, 0, True, False), Queen(3, 0, True, False), self.white_king, Bishop(5, 0, True, False),
+            self.board = [[Rook(0, 0, True, False), Knight(1, 0, True, False), Bishop(2, 0, True, False),
+                           Queen(3, 0, True, False), self.white_king, Bishop(5, 0, True, False),
                            Knight(6, 0, True, False), Rook(7, 0, True, False)],
                           [Pawn(i, 1, True, False) for i in range(8)],
                           [None for i in range(8)],
@@ -152,9 +149,29 @@ class Chess(pyglet.window.Window):
                           [None for i in range(8)],
                           [None for i in range(8)],
                           [Pawn(i, 6, False, True) for i in range(8)],
-                          [Rook(0, 7, False, True), Knight(1, 7, False, True), Bishop(2, 7, False, True), Queen(3, 7, False, True),
-                           self.black_king, Bishop(5, 7, False, True), Knight(6, 7, False, True), Rook(7, 7, False, True)]]
-            self._move = False
+                          [Rook(0, 7, False, True), Knight(1, 7, False, True), Bishop(2, 7, False, True),
+                           Queen(3, 7, False, True),
+                           self.black_king, Bishop(5, 7, False, True), Knight(6, 7, False, True),
+                           Rook(7, 7, False, True)]]
+
+            self.white_queen = pyglet.sprite.Sprite(self.sprite_sheet[1], 131.25, 225, group=self._foreground)
+            self.white_rook = pyglet.sprite.Sprite(self.sprite_sheet[4], 218.75, 225, group=self._foreground)
+            self.white_bishop = pyglet.sprite.Sprite(self.sprite_sheet[2], 306.25, 225, group=self._foreground)
+            self.white_knight = pyglet.sprite.Sprite(self.sprite_sheet[3], 393.75, 225, group=self._foreground)
+            self.black_queen = pyglet.sprite.Sprite(self.sprite_sheet[7], 131.25, 225, group=self._foreground)
+            self.black_rook = pyglet.sprite.Sprite(self.sprite_sheet[10], 218.75, 225, group=self._foreground)
+            self.black_bishop = pyglet.sprite.Sprite(self.sprite_sheet[8], 306.25, 225, group=self._foreground)
+            self.black_knight = pyglet.sprite.Sprite(self.sprite_sheet[9], 393.75, 225, group=self._foreground)
+
+        # List containing images of the dot when it's possible to move
+        self.valid_sprites = []
+        for i in range(8):
+            row_sprites = []
+            for j in range(8):
+                sprite = pyglet.sprite.Sprite(self.valid_img, 75 * j, 75 * i, group=self._foreground)
+                sprite.visible = False
+                row_sprites.append(sprite)
+            self.valid_sprites.append(row_sprites)
 
     def on_mouse_press(self, x, y, button, modifiers):
         if not self._block_screen:
