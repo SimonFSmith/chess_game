@@ -303,28 +303,29 @@ class Chess(pyglet.window.Window):
                 if self._can_cancel_last_move:
                     if self.undo_y < y < (self.undo_y + self.undo_state.height):
                         if self.undo_x < x < (self.undo_x + self.undo_state.width):
-                            self.undo_state = resources.undo_button_press
-                            pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
-                            history_data = History.get_move(self._history)
-                            Piece.change_location(history_data['piece'],
-                                                  history_data['start_position_x'],
-                                                  history_data['start_position_y'],
-                                                  self.board)
-                            self.cancel_last_move(history_data["color"],
-                                                  history_data['piece'],
-                                                  history_data['captured_piece'],
-                                                  history_data['start_position_x'],
-                                                  history_data['start_position_y'],
-                                                  history_data['end_position_x'],
-                                                  history_data['end_position_y'],
-                                                  history_data['castling'],
-                                                  history_data['check'],
-                                                  self.board)
-                            if self.move:
-                                self.move = False
-                            elif not self.move:
-                                self.move = True
-                            self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
+                            if History.get_move(self._history):
+                                self.undo_state = resources.undo_button_press
+                                pyglet.clock.schedule_once(self.update_undo_hover, 0.17)
+                                history_data = History.get_move(self._history)
+                                Piece.change_location(history_data['piece'],
+                                                      history_data['start_position_x'],
+                                                      history_data['start_position_y'],
+                                                      self.board)
+                                self.cancel_last_move(history_data["color"],
+                                                      history_data['piece'],
+                                                      history_data['captured_piece'],
+                                                      history_data['start_position_x'],
+                                                      history_data['start_position_y'],
+                                                      history_data['end_position_x'],
+                                                      history_data['end_position_y'],
+                                                      history_data['castling'],
+                                                      history_data['check'],
+                                                      self.board)
+                                if self.move:
+                                    self.move = False
+                                elif not self.move:
+                                    self.move = True
+                                self._publisher.dispatch(self.EVENT_MOVE_UNDONE)
 
                 # if add button is clicked
                 if self.add_y < y < (self.add_y + self.add_state.height):
