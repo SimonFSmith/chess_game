@@ -21,6 +21,8 @@ class Chess(pyglet.window.Window):
     EVENT_PIECE_MOVED = "EVENT_PIECE_MOVED"
     EVENT_MOVE_UNDONE = "EVENT_MOVE_UNDONE"
     EVENT_NEW_GAME = 'EVENT_NEW_GAME'
+    EVENT_ABOUT_GAME = 'EVENT_ABOUT_GAME'
+    EVENT_RULES_GAME = 'EVENT_RULES_GAME'
 
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -79,7 +81,8 @@ class Chess(pyglet.window.Window):
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
                                          height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
-        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME])
+        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME,
+                                     self.EVENT_ABOUT_GAME, self.EVENT_RULES_GAME])
 
     def on_draw(self):
         # Board initialization
@@ -377,6 +380,7 @@ class Chess(pyglet.window.Window):
                         if self.about_y < y < (self.about_y + self.about_state.height):
                             if self.about_x < x < (self.about_x + self.about_state.width):
                                 self.change_color_press_about()
+                                self._publisher.dispatch(self.EVENT_ABOUT_GAME)
                 else:
                     pass
 
