@@ -55,7 +55,6 @@ class Chess(pyglet.window.Window):
                                     caption='Chess',
                                     config=pyglet.gl.Config(double_buffer=True),  # Configuration graphique
                                     vsync=False)  # FPS
-        self._move = True  # White if true, Black if false
         self.reset()
         self._block_screen = False
         # List containing images of the dot when it's possible to move
@@ -127,7 +126,7 @@ class Chess(pyglet.window.Window):
         self._gui.add(self._scrollbox)
         if color:
             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
-            self.black_king = King(4, 7, False)  # If type is False, piece is black
+            self.black_king = King(4, 7, False, False)  # If type is False, piece is black
 
             # Pieces are placed on the board, starting from white, then 4 empty lines and black
             self.board = [[Rook(0, 0), Knight(1, 0), Bishop(2, 0), Queen(3, 0), self.white_king, Bishop(5, 0),
@@ -137,24 +136,25 @@ class Chess(pyglet.window.Window):
                           [None for i in range(8)],
                           [None for i in range(8)],
                           [None for i in range(8)],
-                          [Pawn(i, 6, False) for i in range(8)],
-                          [Rook(0, 7, False), Knight(1, 7, False), Bishop(2, 7, False), Queen(3, 7, False),
-                           self.black_king, Bishop(5, 7, False), Knight(6, 7, False), Rook(7, 7, False)]]
+                          [Pawn(i, 6, False, False) for i in range(8)],
+                          [Rook(0, 7, False, False), Knight(1, 7, False, False), Bishop(2, 7, False, False), Queen(3, 7, False, False),
+                           self.black_king, Bishop(5, 7, False, False), Knight(6, 7, False, False), Rook(7, 7, False, False)]]
+            self._move = True
         else:
-            self.white_king = King(4, 0, False)  # Placement is made from right to left and from bottom to top
-            self.black_king = King(4, 7)  # If type is False, piece is black
+            self.white_king = King(4, 0, True, False)  # Placement is made from right to left and from bottom to top
+            self.black_king = King(4, 7, False, True)  # If type is False, piece is black
             # Pieces are placed on the board, starting from white, then 4 empty lines and black
-            self.board = [[Rook(0, 0, False), Knight(1, 0, False), Bishop(2, 0, False), Queen(3, 0, False),
-                           self.white_king, Bishop(5, 0, False),
-                           Knight(6, 0, False), Rook(7, 0, False)],
-                          [Pawn(i, 1, False) for i in range(8)],
+            self.board = [[Rook(0, 0, True, False), Knight(1, 0, True, False), Bishop(2, 0, True, False), Queen(3, 0, True, False), self.white_king, Bishop(5, 0, True, False),
+                           Knight(6, 0, True, False), Rook(7, 0, True, False)],
+                          [Pawn(i, 1, True, False) for i in range(8)],
                           [None for i in range(8)],
                           [None for i in range(8)],
                           [None for i in range(8)],
                           [None for i in range(8)],
-                          [Pawn(i, 6) for i in range(8)],
-                          [Rook(0, 7), Knight(1, 7), Bishop(2, 7), Queen(3, 7),
-                           self.black_king, Bishop(5, 7), Knight(6, 7), Rook(7, 7)]]
+                          [Pawn(i, 6, False, True) for i in range(8)],
+                          [Rook(0, 7, False, True), Knight(1, 7, False, True), Bishop(2, 7, False, True), Queen(3, 7, False, True),
+                           self.black_king, Bishop(5, 7, False, True), Knight(6, 7, False, True), Rook(7, 7, False, True)]]
+            self._move = False
 
     def on_mouse_press(self, x, y, button, modifiers):
         if not self._block_screen:

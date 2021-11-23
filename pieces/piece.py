@@ -4,15 +4,12 @@ WHITE_KNIGHT, WHITE_ROOK, WHITE_PAWN = range(12)
 
 
 class Piece(object):
-    # Attributes
-    white = True
-    piece_sprite = None
-    captured = False
-
     # Constructor
-    def __init__(self, type):
+    def __init__(self, type, visually_white):
         self.white = type
+        self.visually_white = visually_white
         self.captured = False
+        self.piece_sprite = None
 
     # Manage pieces' moves
     def make_move(self, board, move, king):
