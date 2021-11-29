@@ -5,9 +5,9 @@ from pieces.piece import Piece, WHITE_ROOK, BLACK_ROOK
 
 
 class Rook(Piece):
-    def __init__(self, x, y, type=True):
-        super(Rook, self).__init__(type)
-        if self.white:
+    def __init__(self, x, y, type=True, visually_white=True):
+        super(Rook, self).__init__(type, visually_white)
+        if self.visually_white:
             self.piece_image = resources.sprite_sheet[WHITE_ROOK]
         else:
             self.piece_image = resources.sprite_sheet[BLACK_ROOK]
