@@ -22,6 +22,8 @@ class Chess(pyglet.window.Window):
     EVENT_MOVE_UNDONE = "EVENT_MOVE_UNDONE"
     EVENT_LIST_CLEAR = "EVENT_LIST_CLEAR"
     EVENT_NEW_GAME = 'EVENT_NEW_GAME'
+    EVENT_ABOUT_GAME = 'EVENT_ABOUT_GAME'
+    EVENT_RULES_GAME = 'EVENT_RULES_GAME'
 
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -65,7 +67,8 @@ class Chess(pyglet.window.Window):
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
                                          height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
-        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME, self.EVENT_LIST_CLEAR])
+        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME,
+                                     self.EVENT_LIST_CLEAR, self.EVENT_ABOUT_GAME, self.EVENT_RULES_GAME])
 
     def on_draw(self):
         # Board initialization
@@ -395,7 +398,6 @@ class Chess(pyglet.window.Window):
                         if self.stop_x < x < (self.stop_x + self.stop_state.width):
                             self.change_color_press_stop()
                             self.reset()
-
                             self._publisher.dispatch(self.EVENT_LIST_CLEAR)
                             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
                             self.black_king = King(4, 7, False)  # If type is False, piece is black
@@ -414,18 +416,18 @@ class Chess(pyglet.window.Window):
 
                             self._move = True
 
-                    # if about button is clicked
-                    if self.about_y < y < (self.about_y + self.about_state.height):
-                        if self.about_x < x < (self.about_x + self.about_state.width):
-                            self.change_color_press_about()
 
-                    # si le button save est appuyé
-                    if self.save_y < y < (self.save_y + self.save_state.height):
-                        if self.save_x < x < (self.save_x + self.save_state.width):
-                            self.save_state = resources.save_button_press
-                            pyglet.clock.schedule_once(self.update_save_hover, 0.17)
-                            self._history.save_history()
-
+                        # if about button is clicked
+                        if self.about_y < y < (self.about_y + self.about_state.height):
+                            if self.about_x < x < (self.about_x + self.about_state.width):
+                                self.change_color_press_about()
+                                self._publisher.dispatch(self.EVENT_ABOUT_GAME)
+                        # if save button is clicked
+                        if self.save_y < y < (self.save_y + self.save_state.height):
+                            if self.save_x < x < (self.save_x + self.save_state.width):
+                                self.save_state = resources.save_button_press
+                                pyglet.clock.schedule_once(self.update_save_hover, 0.17)
+                                self._history.save_history()
                 else:
                     pass
 

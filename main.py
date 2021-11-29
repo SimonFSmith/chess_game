@@ -1,14 +1,11 @@
 import glooey
 
 from dialog import WesnothDialog, WesnothTitle
+from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
 from gui_chess import Chess, pyglet
 from scrollbox import WesnothScrollBox
 
 _my_game = Chess()
-_gui = glooey.Gui(_my_game, batch=_my_game.get_batch())
-
-_scrollbox = WesnothScrollBox()
-_gui.add(_scrollbox)
 
 
 def _add_last_move_to_scrollbox():
@@ -31,6 +28,13 @@ def _show_new_game_dialog():
 
     _my_game.set_block_screen(True)
 
+def _show_about_dialog():
+    _about = WesnothDialogAbout()
+    _label_title = WesnothTitleAbout()
+    _label_about = WesnothLabelAbout()
+    _about.add(_label_title)
+    _about.add(_label_about)
+    _my_game.get_gui().add(_about)
 
 def _set_player_turn_black():
     _my_game.reset(False)
@@ -50,6 +54,6 @@ _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_
 _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_last_move)
 _my_game.get_publisher().register(_my_game.EVENT_LIST_CLEAR, "main", _scrollbox.clear_label)
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
-
-pyglet.clock.schedule_interval(_my_game.update, 1 / 60)
+_my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
+pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
 pyglet.app.run()
