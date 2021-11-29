@@ -1,3 +1,4 @@
+import glooey
 import pyglet
 from pyglet import shapes
 from pyglet.window import mouse
@@ -339,11 +340,11 @@ class Chess(pyglet.window.Window):
                                         sprite.visible = False  # Removes the move possibilities
 
                                 # Adds previous move to history
-                                self._history.add_move_to_history(not self.move, _moved_piece, _captured_piece,
+                                self._history.add_move_to_history(not self._move, _moved_piece, _captured_piece,
                                                                   _start_position_x, _start_position_y, board_x,
                                                                   board_y,
                                                                   _promoted_pawn, _castling,
-                                                                  self.white_king.danger.visible if self.move else self.black_king.danger.visible,
+                                                                  self.white_king.danger.visible if self._move else self.black_king.danger.visible,
                                                                   _checkmate)
                                 self._can_cancel_last_move = True
                                 if not self.promotion:
