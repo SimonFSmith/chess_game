@@ -393,8 +393,9 @@ class Chess(pyglet.window.Window):
                     # if add button is clicked
                     if self.add_y < y < (self.add_y + self.add_state.height):
                         if self.add_x < x < (self.add_x + self.add_state.width):
-                            self.change_color_press_add()
-                            self._publisher.dispatch(self.EVENT_NEW_GAME)
+                            if not self.game_started:
+                                self.change_color_press_add()
+                                self._publisher.dispatch(self.EVENT_NEW_GAME)
 
                     # if rules button is clicked
                     if self.rules_y < y < (self.rules_y + self.rules_state.height):
