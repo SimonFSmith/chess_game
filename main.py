@@ -60,5 +60,6 @@ _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_la
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_RULES_GAME, "main", _show_rules_dialog)
+_show_new_game_dialog()
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
 pyglet.app.run()
