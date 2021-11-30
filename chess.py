@@ -278,21 +278,22 @@ class Chess(pyglet.window.Window):
                         elif self.board[board_y][board_x] is not None and self._move == self.board[board_y][
                             board_x].white:  # If you have a piece selected and you wanna select another one
                             # Remove past move posibilities
-                            for row in self.valid_sprites:
-                                for sprite in row:
-                                    sprite.visible = False
-                            self.current_pos = (board_y, board_x)
-                            if self._move:  # If it's white
-                                valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                           self.white_king)  # Put the white's valid move inside the variable
-                            else:  # If it's black
-                                valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                           self.black_king)  # Put the blacks's valid move inside the variable
-                            if len(valid_moves) == 0:  # If there's no valid move
-                                self.current_pos = (-1, -1)  # Nothing to show, position is reset
-                            else:  # If there are possible moves
-                                for move in valid_moves:  # For each move inside the variable
-                                    self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
+                            if self.game_started:
+                                for row in self.valid_sprites:
+                                    for sprite in row:
+                                        sprite.visible = False
+                                self.current_pos = (board_y, board_x)
+                                if self._move:  # If it's white
+                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                               self.white_king)  # Put the white's valid move inside the variable
+                                else:  # If it's black
+                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                               self.black_king)  # Put the blacks's valid move inside the variable
+                                if len(valid_moves) == 0:  # If there's no valid move
+                                    self.current_pos = (-1, -1)  # Nothing to show, position is reset
+                                else:  # If there are possible moves
+                                    for move in valid_moves:  # For each move inside the variable
+                                        self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
                         else:  # Making the move
                             if self.valid_sprites[board_y][board_x].visible:  # If possible moves visible
                                 # Saves the captured piece if there is
