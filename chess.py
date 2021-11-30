@@ -197,25 +197,30 @@ class Chess(pyglet.window.Window):
                 if self.promotion:  # If there is a promotion
                     if button == mouse.LEFT:
                         if 225 < y < 300:
+                            temp = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
                             # A piece is chosen in fonction of where the player clicks
                             if 131.25 < x < 206.25:
                                 self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Queen(self.promo_pawn[1],
                                                                                            self.promo_pawn[0],
-                                                                                           not self._move)
+                                                                                           temp.white,
+                                                                                           temp.visually_white)
                             elif 218.75 < x < 293.75:
                                 self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Rook(self.promo_pawn[1],
                                                                                           self.promo_pawn[0],
-                                                                                          not self._move)
+                                                                                          temp.white,
+                                                                                          temp.visually_white)
                             elif 306.25 < x < 381.25:
-                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_Pawn[1],
+                                self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Bishop(self.promo_pawn[1],
                                                                                             self.promo_pawn[0],
-                                                                                            not self._move)
+                                                                                            temp.white,
+                                                                                            temp.visually_white)
                             elif 393.75 < x < 468.75:
                                 self.board[self.promo_pawn[0]][self.promo_pawn[1]] = Knight(self.promo_pawn[1],
                                                                                             self.promo_pawn[0],
-                                                                                            not self._move)
+                                                                                            temp.white,
+                                                                                            temp.visually_white)
 
-                            _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
+                        _promoted_pawn = self.board[self.promo_pawn[0]][self.promo_pawn[1]]
                         self.promo_pawn = (-1, -1)
                         self.promotion = False  # Promotion is done so it gets back to False
                         # Checkmate verification after a promotion
