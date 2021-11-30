@@ -417,17 +417,18 @@ class Chess(pyglet.window.Window):
                             self._move = True
 
 
-                        # if about button is clicked
-                        if self.about_y < y < (self.about_y + self.about_state.height):
-                            if self.about_x < x < (self.about_x + self.about_state.width):
-                                self.change_color_press_about()
-                                self._publisher.dispatch(self.EVENT_ABOUT_GAME)
-                        # if save button is clicked
-                        if self.save_y < y < (self.save_y + self.save_state.height):
-                            if self.save_x < x < (self.save_x + self.save_state.width):
-                                self.save_state = resources.save_button_press
-                                pyglet.clock.schedule_once(self.update_save_hover, 0.17)
-                                self._history.save_history()
+                    # if about button is clicked
+                    if self.about_y < y < (self.about_y + self.about_state.height):
+                        if self.about_x < x < (self.about_x + self.about_state.width):
+                            self.change_color_press_about()
+                            self._publisher.dispatch(self.EVENT_ABOUT_GAME)
+
+                    # if save button is clicked
+                    if self.save_y < y < (self.save_y + self.save_state.height):
+                        if self.save_x < x < (self.save_x + self.save_state.width):
+                            self.save_state = resources.save_button_press
+                            pyglet.clock.schedule_once(self.update_save_hover, 0.17)
+                            self._history.save_history()
                 else:
                     pass
 
