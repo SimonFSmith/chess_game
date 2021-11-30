@@ -88,4 +88,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# Other
 .idea/
+game_history/
