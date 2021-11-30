@@ -1,17 +1,11 @@
-import glooey
-
 from dialog import WesnothDialog, WesnothTitle
 from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
 from rules import WesnothDialogRules
-from scrollbox_rules import WesnothScrollBox, WesnothLoremIpsum
+from scrollbox_rules import WesnothScrollBoxRules
 from gui_chess import Chess, pyglet
-from scrollbox import WesnothScrollBox
 
 _my_game = Chess()
-_gui = glooey.Gui(_my_game, batch=_my_game.get_batch())
 
-_scrollbox = WesnothScrollBox()
-_gui.add(_scrollbox)
 
 def _add_last_move_to_scrollbox():
     _my_game.get_scrollbox().update_label_text(_my_game.get_history().format_move())
@@ -35,7 +29,7 @@ def _show_new_game_dialog():
 
 def _show_rules_dialog():
     _rules = WesnothDialogRules()
-    _scrollbox_rules = WesnothScrollBox()
+    _scrollbox_rules = WesnothScrollBoxRules()
     _rules.add(_scrollbox_rules)
     _my_game.get_gui().add(_rules)
 

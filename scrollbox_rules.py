@@ -2,17 +2,13 @@ import glooey
 
 import resources
 
-class WesnothLoremIpsum(glooey.LoremIpsum):
-    custom_font_size = 10
-    custom_color = '#b9ad86'
-    custom_alignment = 'fill horz'
 
-class WesnothScrollBox(glooey.ScrollBox):
+class WesnothScrollBoxRules(glooey.ScrollBox):
     custom_alignment = 'right'
     custom_height_hint = 200
 
     def __init__(self):
-        super(WesnothScrollBox, self).__init__()
+        super(WesnothScrollBoxRules, self).__init__()
         self._text = '                                                                    General rules \n \n' +\
                      'The aim in the chess game is delivering a checkmate – trapping your opponent´s king.\n \n'+\
                      'White is always first to move, and players take turns alternately moving one piece at a\n' +  \
