@@ -1,8 +1,8 @@
-from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
-from dialog import WesnothDialog, WesnothTitle
+from dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
+from dialog_new_game import DialogNewGame, TitleNewGameDialog
+from dialog_rules import DialogRules
 from gui_chess import Chess, pyglet
-from rules import WesnothDialogRules
-from scrollbox_rules import WesnothScrollBoxRules
+from scrollbox_rules import ScrollboxRules
 
 _my_game = Chess()
 
@@ -17,9 +17,9 @@ def _delete_last_move():
 
 
 def _show_new_game_dialog():
-    _dialog = WesnothDialog()
-    _label = WesnothTitle()
-    _dialog.add(_label)
+    _dialog = DialogNewGame()
+    _title = TitleNewGameDialog()
+    _dialog.add(_title)
     _my_game.get_gui().add(_dialog)
     _dialog.get_publisher().register(_dialog.EVENT_BLACK_BUTTON_CLICKED, "main", _set_player_turn_black)
     _dialog.get_publisher().register(_dialog.EVENT_WHITE_BUTTON_CLICKED, "main", _set_player_turn_white)
@@ -29,23 +29,23 @@ def _show_new_game_dialog():
 
 
 def _show_rules_dialog():
-    _rules = WesnothDialogRules()
-    _scrollbox_rules = WesnothScrollBoxRules()
-    _rules.add(_scrollbox_rules)
-    _my_game.get_gui().add(_rules)
-    _rules.get_publisher().register(_rules.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
+    _dialog = DialogRules()
+    _scrollbox = ScrollboxRules()
+    _dialog.add(_scrollbox)
+    _my_game.get_gui().add(_dialog)
+    _dialog.get_publisher().register(_dialog.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
 
     _my_game.set_block_screen(True)
 
 
 def _show_about_dialog():
-    _about = WesnothDialogAbout()
-    _label_title = WesnothTitleAbout()
-    _label_about = WesnothLabelAbout()
-    _about.add(_label_title)
-    _about.add(_label_about)
-    _my_game.get_gui().add(_about)
-    _about.get_publisher().register(_about.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
+    _dialog = DialogAbout()
+    _title = TitleAboutDialog()
+    _content = ContentAboutDialog()
+    _dialog.add(_title)
+    _dialog.add(_content)
+    _my_game.get_gui().add(_dialog)
+    _dialog.get_publisher().register(_dialog.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
 
     _my_game.set_block_screen(True)
 
@@ -69,5 +69,6 @@ _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_la
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_RULES_GAME, "main", _show_rules_dialog)
+
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
 pyglet.app.run()

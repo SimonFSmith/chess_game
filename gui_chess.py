@@ -13,7 +13,7 @@ from pieces.pawn import Pawn
 from pieces.piece import Piece
 from pieces.queen import Queen
 from pieces.rook import Rook
-from scrollbox import WesnothScrollBox
+from scrollbox import Scrollbox
 
 
 class Chess(pyglet.window.Window):
@@ -113,7 +113,7 @@ class Chess(pyglet.window.Window):
         self.chessboard = pyglet.sprite.Sprite(img=resources.chessboard, x=0, y=0, batch=self._batch,
                                                group=self._foreground)
         self._gui = glooey.Gui(self, batch=self._batch, group=self._hud)
-        self._scrollbox = WesnothScrollBox()
+        self._scrollbox = Scrollbox()
         self._gui.add(self._scrollbox)
         if color:
             self._move = True

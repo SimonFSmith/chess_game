@@ -4,7 +4,7 @@ import resources
 from lib.publisher import Publisher
 
 
-class WesnothTitleAbout(glooey.Label):
+class TitleRulesDialog(glooey.Label):
     custom_text = "About"
     custom_font_size = 10
     custom_color = '#000000'
@@ -12,40 +12,42 @@ class WesnothTitleAbout(glooey.Label):
     custom_bold = True
 
 
-class WesnothLabelAbout(glooey.Label):
+class ContentRulesDialog(glooey.Label):
     custom_text = '            Project manager / Programmer \n                  Simon Fournier-Smith \n  \n ' \
-                  + '                      Programmers              ' \
-                  + '\n                         Benoit Côté' + '\n                         Félix Poirier' \
-                  + '\n                    Samuel Legendre   ' \
-                  + '\n  \n            Based on the chess project of \n          ' \
-                  + '           Fahad Ahmed Kan  \n \n        ' \
-                  + '        Find the project on GitHub \n' \
-                  + 'https://github.com/SimonFSmith/chess_game \n '
+                +  '                      Programmers              '                                           \
+                + '\n                         Benoit Côté' + '\n                         Félix Poirier'       \
+                +'\n                    Samuel Legendre   '                                                   \
+                + '\n  \n            Based on the chess project of \n          '                              \
+                +    '           Fahad Ahmed Kan  \n \n        '                                              \
+                + '        Find the project on GitHub \n'                                                     \
+                + 'https://github.com/SimonFSmith/chess_game \n '
 
     custom_color = '#000000'
     custom_alignment = 'center'
 
+
     custom_bold = True
 
 
-class WesnothButton(glooey.Button):
-    Foreground = WesnothLabelAbout
+class ButtonRulesDialog(glooey.Button):
+    Foreground = ContentRulesDialog
     Background = glooey.Image
     custom_base_image = resources.custom_base_image_dialog
     custom_over_image = resources.custom_over_image_dialog
     custom_down_image = resources.custom_down_image_dialog
 
 
-class WesnothDialogAbout(glooey.ButtonDialog):
+class DialogRules(glooey.ButtonDialog):
     EVENT_CANCEL_BUTTON = "EVENT_CANCEL_BUTTON"
 
     def __init__(self, *args, **kwargs):
-        super(WesnothDialogAbout, self).__init__(*args, **kwargs)
-        self._cancel_button = self.CancelButton()
+        super(DialogRules, self).__init__(*args, **kwargs)
+        self._cancel_button = self.CancelButtonRulesDialog()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._cancel_button)
 
         self._publisher = Publisher([self.EVENT_CANCEL_BUTTON])
+
 
     def on_cancel_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_CANCEL_BUTTON)
@@ -53,6 +55,7 @@ class WesnothDialogAbout(glooey.ButtonDialog):
 
     def get_publisher(self):
         return self._publisher
+
 
     class Decoration(glooey.Background):
         custom_center = resources.custom_center_image_dialog
@@ -72,5 +75,5 @@ class WesnothDialogAbout(glooey.ButtonDialog):
         custom_bottom_padding = 17
         custom_cell_padding = 9
 
-    class CancelButton(WesnothButton):
+    class CancelButtonRulesDialog(ButtonRulesDialog):
         custom_text = 'Close'

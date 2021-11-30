@@ -3,12 +3,12 @@ import glooey
 import resources
 
 
-class WesnothScrollBoxRules(glooey.ScrollBox):
+class ScrollboxRules(glooey.ScrollBox):
     custom_alignment = 'right'
     custom_height_hint = 200
 
     def __init__(self):
-        super(WesnothScrollBoxRules, self).__init__()
+        super(ScrollboxRules, self).__init__()
         self._text = '                                                                    General rules \n \n' + \
                      'The aim in the chess game is delivering a checkmate – trapping your opponent´s king.\n \n' + \
                      'White is always first to move, and players take turns alternately moving one piece at a\n' + \

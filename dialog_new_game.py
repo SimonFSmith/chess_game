@@ -4,40 +4,40 @@ import resources
 from lib.publisher import Publisher
 
 
-class WesnothLabel(glooey.Label):
+class LabelButtonNewGameDialog(glooey.Label):
     custom_font_size = 10
     custom_color = '#000000'
     custom_alignment = 'center'
     custom_bold = True
 
 
-class WesnothTitle(glooey.Label):
+class TitleNewGameDialog(glooey.Label):
     custom_text = 'Create new game'
     custom_color = '#000000'
     custom_alignment = 'center'
     custom_bold = True
 
 
-class WesnothButton(glooey.Button):
-    Foreground = WesnothLabel
+class ButtonNewGameDialog(glooey.Button):
+    Foreground = LabelButtonNewGameDialog
     Background = glooey.Image
     custom_base_image = resources.custom_base_image_dialog
     custom_over_image = resources.custom_over_image_dialog
     custom_down_image = resources.custom_down_image_dialog
 
 
-class WesnothDialog(glooey.ButtonDialog):
+class DialogNewGame(glooey.ButtonDialog):
     EVENT_BLACK_BUTTON_CLICKED = 'EVENT_BLACK_BUTTON_CLICKED'
     EVENT_WHITE_BUTTON_CLICKED = 'EVENT_WHITE_BUTTON_CLICKED'
     EVENT_DIALOG_CLOSED = 'EVENT_DIALOG_CLOSED'
 
     def __init__(self, *args, **kwargs):
-        super(WesnothDialog, self).__init__(*args, **kwargs)
-        self._black_button = self.BlackButton()
+        super(DialogNewGame, self).__init__(*args, **kwargs)
+        self._black_button = self.BlackButtonNewGameDialog()
         self._black_button.push_handlers(on_click=self.on_black_button_click)
-        self._white_button = self.WhiteButton()
+        self._white_button = self.WhiteButtonNewGameDialog()
         self._white_button.push_handlers(on_click=self.on_white_button_click)
-        self._cancel_button = self.CancelButton()
+        self._cancel_button = self.CancelButtonNewGameDialog()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._black_button)
         self.get_buttons().add(self._white_button)
@@ -82,11 +82,11 @@ class WesnothDialog(glooey.ButtonDialog):
         custom_cell_padding = 3
         custom_alignment = 'right'
 
-    class BlackButton(WesnothButton):
+    class BlackButtonNewGameDialog(ButtonNewGameDialog):
         custom_text = 'Black'
 
-    class WhiteButton(WesnothButton):
+    class WhiteButtonNewGameDialog(ButtonNewGameDialog):
         custom_text = 'White'
 
-    class CancelButton(WesnothButton):
+    class CancelButtonNewGameDialog(ButtonNewGameDialog):
         custom_text = 'Cancel'
