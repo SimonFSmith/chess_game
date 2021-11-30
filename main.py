@@ -55,7 +55,6 @@ def _unblock_screen():
 
 _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_move_to_scrollbox)
 _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_last_move)
-_my_game.get_publisher().register(_my_game.EVENT_LIST_CLEAR, "main", _scrollbox.clear_label)
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
