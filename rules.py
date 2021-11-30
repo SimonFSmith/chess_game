@@ -4,7 +4,7 @@ import resources
 from lib.publisher import Publisher
 
 
-class WesnothTitleAbout(glooey.Label):
+class WesnothTitleRules(glooey.Label):
     custom_text = "About"
     custom_font_size = 10
     custom_color = '#000000'
@@ -12,7 +12,7 @@ class WesnothTitleAbout(glooey.Label):
     custom_bold = True
 
 
-class WesnothLabelAbout(glooey.Label):
+class WesnothLabelRules(glooey.Label):
     custom_text = '            Project manager / Programmer \n                  Simon Fournier-Smith \n  \n ' \
                 +  '                      Programmers              '                                           \
                 + '\n                         Benoit Côté' + '\n                         Félix Poirier'       \
@@ -30,18 +30,18 @@ class WesnothLabelAbout(glooey.Label):
 
 
 class WesnothButton(glooey.Button):
-    Foreground = WesnothLabelAbout
+    Foreground = WesnothLabelRules
     Background = glooey.Image
     custom_base_image = resources.custom_base_image_dialog
     custom_over_image = resources.custom_over_image_dialog
     custom_down_image = resources.custom_down_image_dialog
 
 
-class WesnothDialogAbout(glooey.ButtonDialog):
+class WesnothDialogRules(glooey.ButtonDialog):
     EVENT_CANCEL_BUTTON = "EVENT_CANCEL_BUTTON"
 
     def __init__(self, *args, **kwargs):
-        super(WesnothDialogAbout, self).__init__(*args, **kwargs)
+        super(WesnothDialogRules, self).__init__(*args, **kwargs)
         self._cancel_button = self.CancelButton()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._cancel_button)

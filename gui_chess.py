@@ -113,7 +113,6 @@ class Chess(pyglet.window.Window):
         self._gui = glooey.Gui(self, batch=self._batch, group=self._hud)
         self._scrollbox = WesnothScrollBox()
         self._gui.add(self._scrollbox)
-
         if color:
             self._move = True
             self.white_king = King(4, 0)  # Placement is made from right to left and from bottom to top
@@ -386,10 +385,11 @@ class Chess(pyglet.window.Window):
                             self.change_color_press_add()
                             self._publisher.dispatch(self.EVENT_NEW_GAME)
 
-                    # if rules button is clicked
-                    if self.rules_y < y < (self.rules_y + self.rules_state.height):
-                        if self.rules_x < x < (self.rules_x + self.rules_state.width):
-                            self.change_color_press_rules()
+                        # if rules button is clicked
+                        if self.rules_y < y < (self.rules_y + self.rules_state.height):
+                            if self.rules_x < x < (self.rules_x + self.rules_state.width):
+                                self.change_color_press_rules()
+                                self._publisher.dispatch(self.EVENT_RULES_GAME)
 
                     # if stop button is clicked
                     if self.stop_y < y < (self.stop_y + self.stop_state.height):

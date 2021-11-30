@@ -2,6 +2,8 @@ import glooey
 
 from dialog import WesnothDialog, WesnothTitle
 from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
+from rules import  WesnothDialogRules
+from scrollbox_rules import WesnothScrollBox, WesnothLoremIpsum
 from gui_chess import Chess, pyglet
 from scrollbox import WesnothScrollBox
 
@@ -31,6 +33,12 @@ def _show_new_game_dialog():
 
     _my_game.set_block_screen(True)
 
+def _show_rules_dialog():
+    _rules = WesnothDialogRules()
+    _scrollbox_rules = WesnothScrollBox()
+    _rules.add(_scrollbox_rules)
+    _my_game.get_gui().add(_rules)
+
 def _show_about_dialog():
     _about = WesnothDialogAbout()
     _label_title = WesnothTitleAbout()
@@ -57,5 +65,6 @@ _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_
 _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_last_move)
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
+_my_game.get_publisher().register(_my_game.EVENT_RULES_GAME, "main", _show_rules_dialog)
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
 pyglet.app.run()
