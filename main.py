@@ -1,8 +1,8 @@
-from dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
-from dialog_new_game import DialogNewGame, TitleNewGameDialog
-from dialog_rules import DialogRules
-from gui_chess import Chess, pyglet
-from scrollbox_rules import ScrollboxRules
+from dialogs.dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
+from dialogs.dialog_new_game import DialogNewGame, TitleNewGameDialog
+from dialogs.dialog_rules import DialogRules
+from chess import Chess, pyglet
+from scrollboxes.scrollbox_rules import ScrollboxRules
 
 _my_game = Chess()
 

@@ -13,7 +13,7 @@ from pieces.pawn import Pawn
 from pieces.piece import Piece
 from pieces.queen import Queen
 from pieces.rook import Rook
-from scrollbox import Scrollbox
+from scrollboxes.scrollbox import Scrollbox
 
 
 class Chess(pyglet.window.Window):
