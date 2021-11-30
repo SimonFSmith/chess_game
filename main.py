@@ -2,7 +2,7 @@ import glooey
 
 from dialog import WesnothDialog, WesnothTitle
 from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
-from rules import  WesnothDialogRules
+from rules import WesnothDialogRules
 from scrollbox_rules import WesnothScrollBox, WesnothLoremIpsum
 from gui_chess import Chess, pyglet
 from scrollbox import WesnothScrollBox
