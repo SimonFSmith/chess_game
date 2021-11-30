@@ -1,8 +1,8 @@
-from dialog import WesnothDialog, WesnothTitle
 from about import WesnothDialogAbout, WesnothTitleAbout, WesnothLabelAbout
+from dialog import WesnothDialog, WesnothTitle
+from gui_chess import Chess, pyglet
 from rules import WesnothDialogRules
 from scrollbox_rules import WesnothScrollBoxRules
-from gui_chess import Chess, pyglet
 
 _my_game = Chess()
 
@@ -27,11 +27,16 @@ def _show_new_game_dialog():
 
     _my_game.set_block_screen(True)
 
+
 def _show_rules_dialog():
     _rules = WesnothDialogRules()
     _scrollbox_rules = WesnothScrollBoxRules()
     _rules.add(_scrollbox_rules)
     _my_game.get_gui().add(_rules)
+    _rules.get_publisher().register(_rules.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
+
+    _my_game.set_block_screen(True)
+
 
 def _show_about_dialog():
     _about = WesnothDialogAbout()
@@ -40,6 +45,10 @@ def _show_about_dialog():
     _about.add(_label_title)
     _about.add(_label_about)
     _my_game.get_gui().add(_about)
+    _about.get_publisher().register(_about.EVENT_CANCEL_BUTTON, "main", _unblock_screen)
+
+    _my_game.set_block_screen(True)
+
 
 def _set_player_turn_black():
     _my_game.reset(False)

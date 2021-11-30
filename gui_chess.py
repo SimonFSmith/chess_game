@@ -66,7 +66,9 @@ class Chess(pyglet.window.Window):
         self.menu_bar = shapes.Rectangle(self.chessboard.width, 0, width=(self.window_x - self.chessboard.width),
                                          height=150, color=(200, 200, 200))
         self.set_icon(self.sprite_sheet[1])
-        self._publisher = Publisher([self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME, self.EVENT_ABOUT_GAME, self.EVENT_RULES_GAME])
+        self._publisher = Publisher(
+            [self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME, self.EVENT_ABOUT_GAME,
+             self.EVENT_RULES_GAME])
 
     def on_draw(self):
         # Board initialization
@@ -548,7 +550,7 @@ class Chess(pyglet.window.Window):
 
         # button save
         if self.save_x + self.save_state.width > x > self.save_x \
-            and self.save_y + self.save_state.height > y > self.save_y:
+                and self.save_y + self.save_state.height > y > self.save_y:
             self.save_state = resources.save_button_hover
         else:
             self.save_state = resources.save_button_black

@@ -14,17 +14,16 @@ class WesnothTitleAbout(glooey.Label):
 
 class WesnothLabelAbout(glooey.Label):
     custom_text = '            Project manager / Programmer \n                  Simon Fournier-Smith \n  \n ' \
-                +  '                      Programmers              '                                           \
-                + '\n                         Benoit Côté' + '\n                         Félix Poirier'       \
-                +'\n                    Samuel Legendre   '                                                   \
-                + '\n  \n            Based on the chess project of \n          '                              \
-                +    '           Fahad Ahmed Kan  \n \n        '                                              \
-                + '        Find the project on GitHub \n'                                                     \
-                + 'https://github.com/SimonFSmith/chess_game \n '
+                  + '                      Programmers              ' \
+                  + '\n                         Benoit Côté' + '\n                         Félix Poirier' \
+                  + '\n                    Samuel Legendre   ' \
+                  + '\n  \n            Based on the chess project of \n          ' \
+                  + '           Fahad Ahmed Kan  \n \n        ' \
+                  + '        Find the project on GitHub \n' \
+                  + 'https://github.com/SimonFSmith/chess_game \n '
 
     custom_color = '#000000'
     custom_alignment = 'center'
-
 
     custom_bold = True
 
@@ -48,11 +47,12 @@ class WesnothDialogAbout(glooey.ButtonDialog):
 
         self._publisher = Publisher([self.EVENT_CANCEL_BUTTON])
 
-
     def on_cancel_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_CANCEL_BUTTON)
         self.close()
 
+    def get_publisher(self):
+        return self._publisher
 
     class Decoration(glooey.Background):
         custom_center = resources.custom_center_image_dialog

@@ -64,7 +64,6 @@ class History:
             for i in range(len(self._history)):
                 stream.write(self.format_move(i) + ("\n" if i != len(self._history) - 1 else ""))
 
-
     def clear_history(self):
         self._history.clear()
 

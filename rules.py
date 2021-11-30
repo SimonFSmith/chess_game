@@ -53,6 +53,9 @@ class WesnothDialogRules(glooey.ButtonDialog):
         self._publisher.dispatch(self.EVENT_CANCEL_BUTTON)
         self.close()
 
+    def get_publisher(self):
+        return self._publisher
+
 
     class Decoration(glooey.Background):
         custom_center = resources.custom_center_image_dialog
