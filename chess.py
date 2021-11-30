@@ -400,9 +400,10 @@ class Chess(pyglet.window.Window):
                     # if stop button is clicked
                     if self.stop_y < y < (self.stop_y + self.stop_state.height):
                         if self.stop_x < x < (self.stop_x + self.stop_state.width):
-                            self.change_color_press_stop()
-                            self.reset()
-                            self.game_started = False
+                            if self.game_started:
+                                self.change_color_press_stop()
+                                self.reset()
+                                self.game_started = False
 
                     # if about button is clicked
                     if self.about_y < y < (self.about_y + self.about_state.height):
@@ -413,9 +414,10 @@ class Chess(pyglet.window.Window):
                     # if save button is clicked
                     if self.save_y < y < (self.save_y + self.save_state.height):
                         if self.save_x < x < (self.save_x + self.save_state.width):
-                            self.save_state = resources.save_button_press
-                            pyglet.clock.schedule_once(self.update_save_hover, 0.17)
-                            self._history.save_history()
+                            if self.game_started:
+                                self.save_state = resources.save_button_press
+                                pyglet.clock.schedule_once(self.update_save_hover, 0.17)
+                                self._history.save_history()
                 else:
                     pass
 
