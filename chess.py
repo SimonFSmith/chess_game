@@ -53,6 +53,8 @@ class Chess(pyglet.window.Window):
     window_x = 1000
     window_y = 600
 
+    game_started = False
+
     def __init__(self):
         # Board is initialized with its screen size.
         super(Chess, self).__init__(self.window_x, self.window_y,
@@ -261,17 +263,18 @@ class Chess(pyglet.window.Window):
                             if self.board[board_y][board_x] is not None and self._move == self.board[board_y][
                                 board_x].white:  # If there's a click from your side
                                 self.current_pos = (board_y, board_x)  # Current position becomes the clicked one
-                                if self._move:  # If white
-                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                               self.white_king)  # Put the white's valid move inside the variable
-                                else:  # If black
-                                    valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
-                                                                                               self.black_king)  # Put the blacks's valid move inside the variable
-                                if len(valid_moves) == 0:  # If there's no valid move
-                                    self.current_pos = (-1, -1)  # Nothing to show, position is reset
-                                else:  # If there are possible moves
-                                    for move in valid_moves:  # For each move inside the variable
-                                        self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
+                                if self.game_started:
+                                    if self._move:  # If white
+                                        valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                                   self.white_king)  # Put the white's valid move inside the variable
+                                    else:  # If black
+                                        valid_moves = self.board[board_y][board_x].get_valid_moves(self.board,
+                                                                                                   self.black_king)  # Put the blacks's valid move inside the variable
+                                    if len(valid_moves) == 0:  # If there's no valid move
+                                        self.current_pos = (-1, -1)  # Nothing to show, position is reset
+                                    else:  # If there are possible moves
+                                        for move in valid_moves:  # For each move inside the variable
+                                            self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
                         elif self.board[board_y][board_x] is not None and self._move == self.board[board_y][
                             board_x].white:  # If you have a piece selected and you wanna select another one
                             # Remove past move posibilities
@@ -398,6 +401,7 @@ class Chess(pyglet.window.Window):
                         if self.stop_x < x < (self.stop_x + self.stop_state.width):
                             self.change_color_press_stop()
                             self.reset()
+                            self.game_started = False
 
                     # if about button is clicked
                     if self.about_y < y < (self.about_y + self.about_state.height):
@@ -438,6 +442,9 @@ class Chess(pyglet.window.Window):
 
     def set_block_screen(self, block_screen):
         self._block_screen = block_screen
+
+    def start_game(self):
+        self.game_started = True
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):

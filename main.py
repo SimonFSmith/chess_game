@@ -53,11 +53,13 @@ def _show_about_dialog():
 def _set_player_turn_black():
     _my_game.reset(False)
     _my_game.set_block_screen(False)
+    _my_game.start_game()
 
 
 def _set_player_turn_white():
     _my_game.reset()
     _my_game.set_block_screen(False)
+    _my_game.start_game()
 
 
 def _unblock_screen():
