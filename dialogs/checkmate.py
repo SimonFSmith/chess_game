@@ -37,7 +37,6 @@ class DialogCheckmate(glooey.ButtonDialog):
         self.get_buttons().add(self._cancel_button)
         self._publisher = Publisher([self.EVENT_DIALOG_CLOSED])
 
-
     def on_cancel_button_click(self, widget):
         self._publisher.dispatch(self.EVENT_DIALOG_CLOSED)
         self.close()
@@ -66,7 +65,6 @@ class DialogCheckmate(glooey.ButtonDialog):
     class Button(glooey.HBox):
         custom_cell_padding = 3
         custom_alignment = 'right'
-
 
     class CancelButtonCheckmateDialog(CheckmateDialog):
         custom_text = 'OK'

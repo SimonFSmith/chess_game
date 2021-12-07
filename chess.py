@@ -77,7 +77,6 @@ class Chess(pyglet.window.Window):
         # Board initialization
         self.clear()
         self._batch.draw()
-        # self.chessboard.blit(0, 0)
         self.menu_bar.draw()
         self.undo_state.blit(self.undo_x, self.undo_y)
         self.add_state.blit(self.add_x, self.add_y)
@@ -230,7 +229,7 @@ class Chess(pyglet.window.Window):
                         if not self._move:  # If it's black's turn
                             if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
                                     self.board):  # If black king can't move but his not in check, there's a stalemate
-                                print('Stalemate!')
+                                pass
                             if self.black_king.in_check(self.board):  # If black king is in check
                                 self.black_king.danger.visible = True
                                 if self.black_king.no_valid_moves(
@@ -243,7 +242,7 @@ class Chess(pyglet.window.Window):
                         else:  # If it's white's turn
                             if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
                                     self.board):  # If white king can't move but his not in check, there's a stalemate
-                                print('Stalemate!')
+                                pass
                             if self.white_king.in_check(self.board):  # If white king is in check
                                 self.white_king.danger.visible = True
                                 if self.white_king.no_valid_moves(
@@ -280,7 +279,8 @@ class Chess(pyglet.window.Window):
                                         self.current_pos = (-1, -1)  # Nothing to show, position is reset
                                     else:  # If there are possible moves
                                         for move in valid_moves:  # For each move inside the variable
-                                            self.valid_sprites[move[0]][move[1]].visible = True  # Display possible moves
+                                            self.valid_sprites[move[0]][
+                                                move[1]].visible = True  # Display possible moves
                         elif self.board[board_y][board_x] is not None and self._move == self.board[board_y][
                             board_x].white:  # If you have a piece selected and you wanna select another one
                             # Remove past move posibilities
@@ -325,7 +325,7 @@ class Chess(pyglet.window.Window):
                                 if self._move:
                                     if self.black_king.no_valid_moves(self.board) and not self.black_king.in_check(
                                             self.board):
-                                        print('Stalemate!')
+                                        pass
                                     if self.black_king.in_check(self.board):
                                         self.black_king.danger.visible = True
                                         if self.black_king.no_valid_moves(self.board):
@@ -337,7 +337,7 @@ class Chess(pyglet.window.Window):
                                 else:
                                     if self.white_king.no_valid_moves(self.board) and not self.white_king.in_check(
                                             self.board):
-                                        print('Stalemate!')
+                                        pass
                                     if self.white_king.in_check(self.board):
                                         self.white_king.danger.visible = True
                                         if self.white_king.no_valid_moves(self.board):
@@ -370,7 +370,6 @@ class Chess(pyglet.window.Window):
                                 if History.get_move(self._history):
                                     self.change_color_press_undo()
                                     history_data = History.get_move(self._history)
-                                    # msgbox(f"Start position: {data['start_position_x']}, {data['start_position_y']}\nEnd position: {data['end_position_x']}, {data['end_position_y']}")
                                     Piece.change_location(history_data['piece'],
                                                           history_data['start_position_x'],
                                                           history_data['start_position_y'],
@@ -456,7 +455,6 @@ class Chess(pyglet.window.Window):
     def set_start_game(self, value):
         self.game_started = value
 
-
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
@@ -530,7 +528,6 @@ class Chess(pyglet.window.Window):
 
     # fonction pour détecter si la souris est au dessus d'un boutton
     def on_mouse_motion(self, x, y, dx, dy):
-        # print(x, y, dx, dy)
         # button undo
         if self.undo_x + self.undo_state.width > x > self.undo_x \
                 and self.undo_y + self.undo_state.height > y > self.undo_y:

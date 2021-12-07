@@ -1,8 +1,8 @@
+from chess import Chess, pyglet
+from dialogs.checkmate import DialogCheckmate, CheckmateTitleDialog
 from dialogs.dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
 from dialogs.dialog_new_game import DialogNewGame, TitleNewGameDialog
 from dialogs.dialog_rules import DialogRules
-from dialogs.checkmate import DialogCheckmate, CheckmateTitleDialog
-from chess import Chess, pyglet
 from scrollboxes.scrollbox_rules import ScrollboxRules
 
 _my_game = Chess()
@@ -16,6 +16,7 @@ def _delete_last_move():
     _my_game.get_scrollbox().delete_label_last_line()
     _my_game.get_history().delete_move()
 
+
 def _show_checkmate_dialog():
     _checkmate_dialog = DialogCheckmate()
     _checkmate_dialog_title = CheckmateTitleDialog()
@@ -23,6 +24,7 @@ def _show_checkmate_dialog():
     _my_game.get_gui().add(_checkmate_dialog)
     _checkmate_dialog.get_publisher().register(_checkmate_dialog.EVENT_DIALOG_CLOSED, "main", _on_reset_game)
     _my_game.set_block_screen(True)
+
 
 def _show_new_game_dialog():
     _dialog = DialogNewGame()
@@ -73,12 +75,11 @@ def _set_player_turn_white():
 def _unblock_screen():
     _my_game.set_block_screen(False)
 
+
 def _on_reset_game():
     _my_game.reset()
     _my_game.set_start_game(False)
     _my_game.set_block_screen(False)
-
-
 
 
 _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_move_to_scrollbox)

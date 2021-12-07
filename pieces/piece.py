@@ -32,7 +32,6 @@ class Piece(object):
         list_of_moves = self.get_threat_squares(board)  # All moves possible
         valid_moves = []  # All valid moves
         for move in list_of_moves:
-            # tempboard = deepcopy(board) Can be optimized. Edit make_move function to simply revert any changes
             if not self.make_move(board, move, king):
                 valid_moves.append(move)  # Add possible move to list
         return valid_moves
