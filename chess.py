@@ -457,7 +457,6 @@ class Chess(pyglet.window.Window):
         self.game_started = value
 
 
-
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):
         self.undo_state = resources.undo_button_hover
