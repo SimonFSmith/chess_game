@@ -237,7 +237,6 @@ class Chess(pyglet.window.Window):
                                         self.board):  # If black king is in check with no valid moves
                                     _checkmate = True
                                     self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
-                                    self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
                             if self.white_king.danger.visible:  # If white king danger image is visible
                                 if not self.white_king.in_check(self.board):  # If white king is not in check
                                     self.white_king.danger.visible = False  # Danger is not display anymore
@@ -454,8 +453,10 @@ class Chess(pyglet.window.Window):
     def set_block_screen(self, block_screen):
         self._block_screen = block_screen
 
-    def start_game(self):
-        self.game_started = True
+    def set_start_game(self, value):
+        self.game_started = value
+        print(self.game_started)
+
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
     def update_undo_hover(self, dt):

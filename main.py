@@ -21,7 +21,7 @@ def _show_checkmate_dialog():
     _checkmate_dialog_title = CheckmateTitleDialog()
     _checkmate_dialog.add(_checkmate_dialog_title)
     _my_game.get_gui().add(_checkmate_dialog)
-    _checkmate_dialog.get_publisher().register(_checkmate_dialog.EVENT_DIALOG_CLOSED, "main", _unblock_screen)
+    _checkmate_dialog.get_publisher().register(_checkmate_dialog.EVENT_DIALOG_CLOSED, "main", _on_reset_game)
     _my_game.set_block_screen(True)
 
 def _show_new_game_dialog():
@@ -61,17 +61,24 @@ def _show_about_dialog():
 def _set_player_turn_black():
     _my_game.reset(False)
     _my_game.set_block_screen(False)
-    _my_game.start_game()
+    _my_game.set_start_game(True)
 
 
 def _set_player_turn_white():
     _my_game.reset()
     _my_game.set_block_screen(False)
-    _my_game.start_game()
+    _my_game.set_start_game(True)
 
 
 def _unblock_screen():
     _my_game.set_block_screen(False)
+
+def _on_reset_game():
+    _my_game.reset()
+    _my_game.set_start_game(False)
+    _my_game.set_block_screen(False)
+
+
 
 
 _my_game.get_publisher().register(_my_game.EVENT_PIECE_MOVED, "main", _add_last_move_to_scrollbox)

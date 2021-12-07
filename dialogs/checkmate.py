@@ -69,4 +69,4 @@ class DialogCheckmate(glooey.ButtonDialog):
 
 
     class CancelButtonCheckmateDialog(CheckmateDialog):
-        custom_text = 'Cancel'
+        custom_text = 'Ok'
