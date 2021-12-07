@@ -7,6 +7,17 @@ A two-player chess game using python and pyglet. No computer AI. All rules imple
 - A piece can only be moved if it's a valid move.
 - Shows all possible locations a piece can move to.
 - Highlights king red when in check.
+- you can't move pieces if a game isn't already started
+- A new button game to create a game
+  - The new button can't be clicked if a game has already started
+- A return button to delete last move
+- A stop button to stop the current game
+  - The stop button can't be clicked if a game has already started
+- A save button to save the history of the player moves
+  - The save button can't be clicked if a game has already started
+- A rules button to show the general rules of the games
+- An about button to show different information about the program
+- An history that show every move until now
 
 ## How to run?
 1. Install Python 3.5 or newer if not already installed.
