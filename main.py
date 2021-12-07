@@ -1,6 +1,7 @@
 from dialogs.dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
 from dialogs.dialog_new_game import DialogNewGame, TitleNewGameDialog
 from dialogs.dialog_rules import DialogRules
+from dialogs.checkmate import DialogCheckmate, CheckmateTitleDialog
 from chess import Chess, pyglet
 from scrollboxes.scrollbox_rules import ScrollboxRules
 
@@ -15,6 +16,13 @@ def _delete_last_move():
     _my_game.get_scrollbox().delete_label_last_line()
     _my_game.get_history().delete_move()
 
+def _show_checkmate_dialog():
+    _checkmate_dialog = DialogCheckmate()
+    _checkmate_dialog_title = CheckmateTitleDialog()
+    _checkmate_dialog.add(_checkmate_dialog_title)
+    _my_game.get_gui().add(_checkmate_dialog)
+    _checkmate_dialog.get_publisher().register(_checkmate_dialog.EVENT_DIALOG_CLOSED, "main", _unblock_screen)
+    _my_game.set_block_screen(True)
 
 def _show_new_game_dialog():
     _dialog = DialogNewGame()
@@ -71,5 +79,6 @@ _my_game.get_publisher().register(_my_game.EVENT_MOVE_UNDONE, "main", _delete_la
 _my_game.get_publisher().register(_my_game.EVENT_NEW_GAME, "main", _show_new_game_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_ABOUT_GAME, "main", _show_about_dialog)
 _my_game.get_publisher().register(_my_game.EVENT_RULES_GAME, "main", _show_rules_dialog)
+_my_game.get_publisher().register(_my_game.EVENT_CHECKMATE_GAME, "main", _show_checkmate_dialog)
 pyglet.clock.schedule_interval(_my_game.update, 1 / 60.)
 pyglet.app.run()

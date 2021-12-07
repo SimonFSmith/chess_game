@@ -23,6 +23,7 @@ class Chess(pyglet.window.Window):
     EVENT_NEW_GAME = 'EVENT_NEW_GAME'
     EVENT_ABOUT_GAME = 'EVENT_ABOUT_GAME'
     EVENT_RULES_GAME = 'EVENT_RULES_GAME'
+    EVENT_CHECKMATE_GAME = 'EVENT_CHECKMATE_GAME'
 
     chessboard = resources.chessboard
     valid_img = resources.valid_img
@@ -70,7 +71,7 @@ class Chess(pyglet.window.Window):
         self.set_icon(self.sprite_sheet[1])
         self._publisher = Publisher(
             [self.EVENT_PIECE_MOVED, self.EVENT_MOVE_UNDONE, self.EVENT_NEW_GAME, self.EVENT_ABOUT_GAME,
-             self.EVENT_RULES_GAME])
+             self.EVENT_RULES_GAME, self.EVENT_CHECKMATE_GAME])
 
     def on_draw(self):
         # Board initialization
@@ -235,7 +236,8 @@ class Chess(pyglet.window.Window):
                                 if self.black_king.no_valid_moves(
                                         self.board):  # If black king is in check with no valid moves
                                     _checkmate = True
-                                    print("1-0")
+                                    self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
+                                    self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
                             if self.white_king.danger.visible:  # If white king danger image is visible
                                 if not self.white_king.in_check(self.board):  # If white king is not in check
                                     self.white_king.danger.visible = False  # Danger is not display anymore
@@ -248,7 +250,7 @@ class Chess(pyglet.window.Window):
                                 if self.white_king.no_valid_moves(
                                         self.board):  # If white king is in check with no valid moves
                                     _checkmate = True
-                                    print("0-1")
+                                    self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
                             if self.black_king.danger.visible:  # If black king danger image is visible
                                 if not self.black_king.in_check(self.board):  # If black king is not in check
                                     self.black_king.danger.visible = False  # Danger is not display anymore
@@ -329,7 +331,7 @@ class Chess(pyglet.window.Window):
                                         self.black_king.danger.visible = True
                                         if self.black_king.no_valid_moves(self.board):
                                             _checkmate = True
-                                            print("1-0")
+                                            self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
                                     if self.white_king.danger.visible:
                                         if not self.white_king.in_check(self.board):
                                             self.white_king.danger.visible = False
@@ -341,7 +343,7 @@ class Chess(pyglet.window.Window):
                                         self.white_king.danger.visible = True
                                         if self.white_king.no_valid_moves(self.board):
                                             _checkmate = True
-                                            print("0-1")
+                                            self._publisher.dispatch(self.EVENT_CHECKMATE_GAME)
                                     if self.black_king.danger.visible:
                                         if not self.black_king.in_check(self.board):
                                             self.black_king.danger.visible = False
