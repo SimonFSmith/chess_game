@@ -4,23 +4,22 @@ import resources
 from lib.publisher import Publisher
 
 
-class CheckMateLabel(glooey.Label):
+class LabelCheckmateDialog(glooey.Label):
     custom_font_size = 10
     custom_color = '#000000'
     custom_alignment = 'center'
     custom_bold = True
 
 
-class CheckmateTitleDialog(glooey.Label):
+class TitleCheckmateDialog(glooey.Label):
     custom_text = 'Checkmate'
-
     custom_color = '#000000'
     custom_alignment = 'center'
     custom_bold = True
 
 
-class CheckmateDialog(glooey.Button):
-    Foreground = CheckMateLabel
+class ButtonCheckmateDialog(glooey.Button):
+    Foreground = LabelCheckmateDialog
     Background = glooey.Image
     custom_base_image = resources.custom_base_image_dialog
     custom_over_image = resources.custom_over_image_dialog
@@ -32,7 +31,7 @@ class DialogCheckmate(glooey.ButtonDialog):
 
     def __init__(self, *args, **kwargs):
         super(DialogCheckmate, self).__init__(*args, **kwargs)
-        self._cancel_button = self.CancelButtonCheckmateDialog()
+        self._cancel_button = self.CancelButtonButtonCheckmateDialog()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._cancel_button)
         self._publisher = Publisher([self.EVENT_DIALOG_CLOSED])
@@ -66,5 +65,5 @@ class DialogCheckmate(glooey.ButtonDialog):
         custom_cell_padding = 3
         custom_alignment = 'right'
 
-    class CancelButtonCheckmateDialog(CheckmateDialog):
+    class CancelButtonButtonCheckmateDialog(ButtonCheckmateDialog):
         custom_text = 'OK'

@@ -1,5 +1,5 @@
 from chess import Chess, pyglet
-from dialogs.checkmate import DialogCheckmate, CheckmateTitleDialog
+from dialogs.dialog_checkmate import DialogCheckmate, TitleCheckmateDialog
 from dialogs.dialog_about import DialogAbout, TitleAboutDialog, ContentAboutDialog
 from dialogs.dialog_new_game import DialogNewGame, TitleNewGameDialog
 from dialogs.dialog_rules import DialogRules
@@ -19,7 +19,7 @@ def _delete_last_move():
 
 def _show_checkmate_dialog():
     _checkmate_dialog = DialogCheckmate()
-    _checkmate_dialog_title = CheckmateTitleDialog()
+    _checkmate_dialog_title = TitleCheckmateDialog()
     _checkmate_dialog.add(_checkmate_dialog_title)
     _my_game.get_gui().add(_checkmate_dialog)
     _checkmate_dialog.get_publisher().register(_checkmate_dialog.EVENT_DIALOG_CLOSED, "main", _on_reset_game)
