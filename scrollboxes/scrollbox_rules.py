@@ -20,7 +20,7 @@ class ScrollboxRules(glooey.ScrollBox):
                      'When a king is threatened with capture (but can protect himself or escape), it´s called  \n' + \
                      'check. If a king is in check, then the player must make a move that eliminates the threat\n' + \
                      'of capture and cannot leave the king in check. Checkmate happens when a king is placed \n' + \
-                     'in check and there is no legal move to escape. Checkmate ends the game and the side    \n ' + \
+                     'in check and there is no legal move to escape. Checkmate ends the game and the side    \n' + \
                      'whose king was checkmated looses. \n \n' + \
                      '                                                                     Chess moves \n \n' + \
                      'King can move exactly one square horizontally, vertically, or diagonally. At most once in \n' + \
@@ -36,22 +36,22 @@ class ScrollboxRules(glooey.ScrollBox):
                      'piece on either of the two squares diagonally in front of them but cannot move to  \n' + \
                      'these spaces if they are vacant. The pawn is also involved in the two special moves     \n' + \
                      'en passant and promotion. \n \n ' + \
-                     '                                                                       Castling \n \n' + \
+                     '                                                                        Castling \n \n' + \
                      'Castling is the only time in the chess game when more than one piece moves during \n' + \
                      'a turn. During the castling, the king moves two squares towards the rook he intends\n' + \
                      'to castle with, and the rook moves to the square through which the king passed. \n' + \
                      'Castling is only permissible if all the following conditions hold: \n \n' + \
                      'Neither king nor rook involved in castling may have moved from the original position. \n' + \
                      'There must be no pieces between the king and the rook. The king may not currently   \n' + \
-                     'be in check, nor may the king pass through or end up in a square that is under attack    \n ' + \
-                     'by an enemy piece (though the rook is permitted to be under attack and to pass over   \n ' + \
+                     'be in check, nor may the king pass through or end up in a square that is under attack    \n' + \
+                     'by an enemy piece (though the rook is permitted to be under attack and to pass over   \n' + \
                      'an attacked square) \n \n' + \
                      '                                                                       En Passant \n \n' + \
                      'En Passant may only occur when a pawn is moved two squares on its initial movement. \n' + \
                      'When this happens, the opposing player has the option to take the moved pawn “en \n' + \
                      'passant” as if it had only moved one square. This option, though, only stays open for  \n' + \
                      'one move. \n \n' + \
-                     '                                                                      Pawn promotion \n \n ' + \
+                     '                                                                   Pawn promotion \n \n' + \
                      'If a pawn reaches the opponent´s edge of the table, it will be promoted – the pawn may be converted \n' + \
                      'to a queen,  rook, bishop or knight, as the player desires. The choice is not limited to previously \n' + \
                      'captured pieces.'
