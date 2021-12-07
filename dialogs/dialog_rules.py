@@ -39,6 +39,9 @@ class ButtonRulesDialog(glooey.Button):
 class DialogRules(glooey.ButtonDialog):
     EVENT_CANCEL_BUTTON = "EVENT_CANCEL_BUTTON"
 
+    custom_alignment = "top right"
+    custom_height_hint = 450
+
     def __init__(self, *args, **kwargs):
         super(DialogRules, self).__init__(*args, **kwargs)
         self._cancel_button = self.CancelButtonRulesDialog()
