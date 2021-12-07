@@ -455,7 +455,7 @@ class Chess(pyglet.window.Window):
 
     def set_start_game(self, value):
         self.game_started = value
-        print(self.game_started)
+
 
 
     # fonction pour changer l'image du button. nécessaire pour le schedule_once
