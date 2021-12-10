@@ -13,19 +13,20 @@ class TitleAboutDialog(glooey.Label):
 
 
 class ContentAboutDialog(glooey.Label):
-    custom_text = '            Project manager / Programmer \n                  Simon Fournier-Smith \n  \n ' \
+    custom_color = '#000000'
+    custom_alignment = 'center'
+    custom_bold = True
+    custom_text = '          Project manager / Programmer \n                  ' +\
+                  'Simon Fournier-Smith \n  \n ' \
                   + '                      Programmers              ' \
-                  + '\n                         Benoit Côté' + '\n                         Félix Poirier' \
+                  + '\n                         Benoit Côté' + '\n                         ' \
+                                              'Félix Poirier' \
                   + '\n                    Samuel Legendre   ' \
                   + '\n  \n            Based on the chess project of \n          ' \
                   + '           Fahad Ahmed Kan  \n \n        ' \
                   + '        Find the project on GitHub \n' \
                   + 'https://github.com/SimonFSmith/chess_game \n '
 
-    custom_color = '#000000'
-    custom_alignment = 'center'
-
-    custom_bold = True
 
 
 class ButtonAboutDialog(glooey.Button):
@@ -38,9 +39,14 @@ class ButtonAboutDialog(glooey.Button):
 
 class DialogAbout(glooey.ButtonDialog):
     EVENT_CANCEL_BUTTON = "EVENT_CANCEL_BUTTON"
+    custom_alignment = "top right"
+    custom_height_hint = 450
+    custom_width_hint = 400
+
 
     def __init__(self, *args, **kwargs):
         super(DialogAbout, self).__init__(*args, **kwargs)
+
         self._cancel_button = self.CancelButtonAboutDialog()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._cancel_button)

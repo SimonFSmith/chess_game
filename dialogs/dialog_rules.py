@@ -13,18 +13,8 @@ class TitleRulesDialog(glooey.Label):
 
 
 class ContentRulesDialog(glooey.Label):
-    custom_text = '            Project manager / Programmer \n                  Simon Fournier-Smith \n  \n ' \
-                  + '                      Programmers              ' \
-                  + '\n                         Benoit Côté' + '\n                         Félix Poirier' \
-                  + '\n                    Samuel Legendre   ' \
-                  + '\n  \n            Based on the chess project of \n          ' \
-                  + '           Fahad Ahmed Kan  \n \n        ' \
-                  + '        Find the project on GitHub \n' \
-                  + 'https://github.com/SimonFSmith/chess_game \n '
-
     custom_color = '#000000'
     custom_alignment = 'center'
-
     custom_bold = True
 
 
@@ -36,18 +26,19 @@ class ButtonRulesDialog(glooey.Button):
     custom_down_image = resources.custom_down_image_dialog
 
 
+
 class DialogRules(glooey.ButtonDialog):
     EVENT_CANCEL_BUTTON = "EVENT_CANCEL_BUTTON"
-
     custom_alignment = "top right"
-    custom_height_hint = 450
+    custom_size_hint = 100, 450
+
+
 
     def __init__(self, *args, **kwargs):
         super(DialogRules, self).__init__(*args, **kwargs)
         self._cancel_button = self.CancelButtonRulesDialog()
         self._cancel_button.push_handlers(on_click=self.on_cancel_button_click)
         self.get_buttons().add(self._cancel_button)
-
         self._publisher = Publisher([self.EVENT_CANCEL_BUTTON])
 
     def on_cancel_button_click(self, widget):
@@ -77,3 +68,4 @@ class DialogRules(glooey.ButtonDialog):
 
     class CancelButtonRulesDialog(ButtonRulesDialog):
         custom_text = 'Close'
+
